@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="my-3 bg-gray-100 p-5 rounded-xl">
         <form @submit.prevent="submitForm">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div v-for="(field, key) in fields" :key="key">

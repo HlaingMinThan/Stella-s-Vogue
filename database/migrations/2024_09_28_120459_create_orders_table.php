@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('screenshot')->nullable();
             $table->unsignedBigInteger('delivery_id');
             $table->text('notes');
-            $table->decimal('amount', 8, 2);
+            $table->decimal('amount', 8, 2)->default(0);
             $table->timestamps();
         });
     }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderRequest;
+use App\Models\Delivery;
 use App\Models\Order;
+use App\Static\PaymentOption;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -34,13 +37,47 @@ class OrderController extends Controller
     {
         return inertia("Admin/Orders/Create", [
             'collections' => \App\Models\Collection::latest()->get(),
+            'payments' => PaymentOption::all(),
+            'deliveries' => Delivery::all(),
         ]);
     }
+
+    public function store(OrderRequest $request)
+    {
+        // Create a new order instance
+        $order = new Order();
+
+        // Fill the order data
+        $order->name = $request->name;
+        $order->color = $request->color;
+        $order->address = $request->address;
+        $order->phone = $request->phone;
+        $order->payment = $request->payment;
+        $order->delivery_id = $request->delivery_id;
+        $order->notes = $request->notes;
+        $order->collection_id = $request->collection_id;
+        $order->amount = $request->amount;
+
+        // Handle file upload if a screenshot is provided
+        if ($request->hasFile('screenshot')) {
+            $filePath = $request->file('screenshot')->store('screenshots', 'public'); // Store in 'public/screenshots'
+            $order->screenshot = $filePath;
+        }
+
+        // Save the order to the database
+        $order->save();
+
+        // Return a response (could redirect or return JSON)
+        return redirect()->route('admin.orders.index')->with('success', 'Order created successfully!');
+    }
+
     public function edit(Order $order)
     {
         return inertia("Admin/Orders/Edit", [
             'collections' => \App\Models\Collection::latest()->get(),
-            'order' => $order
+            'payments' => PaymentOption::all(),
+            'order' => $order,
+            'deliveries' => Delivery::all(),
         ]);
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="text-xl font-bold">Edit Order</h1>
-        <OrderForm :initialForm="order" :isEditMode="true" />
+        <OrderForm :initialForm="order" :isEditMode="true" :collections="collections" :payments="payments" :deliveries="deliveries"/>
     </div>
 </template>
   
@@ -13,6 +13,9 @@ export default {
         OrderForm,
     },
     props: {
+        collections : Array,
+        deliveries : Array,
+        payments : Array,
         order: Object, // Should be passed as a prop from the parent component
     },
 };

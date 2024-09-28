@@ -29,6 +29,7 @@ class OrderFactory extends Factory
             'screenshot' => fake()->imageUrl, // Example for image URL; adjust as needed
             'delivery_id' => fake()->randomElement(Delivery::pluck('id')), // Assuming you have delivery IDs 1 to 10
             'notes' => fake()->sentence,
+            'amount' => fake()->numberBetween(100000, 1000000),
         ];
     }
 }

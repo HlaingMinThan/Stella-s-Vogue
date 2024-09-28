@@ -61,7 +61,7 @@
                                 <TableDataCell>{{ item.payment }}</TableDataCell>
                                 <TableDataCell>{{ item.screenshot }}</TableDataCell>
                                 <TableDataCell>{{ item.delivery.name }}</TableDataCell>
-                                <TableDataCell>{{ item.notes }}</TableDataCell>
+                                <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.notes }}</p></TableDataCell>
                                 <TableActionCell>
                                     <InertiaLinkButton
                                         :href="route('admin.orders.edit', { order: item?.id })"
