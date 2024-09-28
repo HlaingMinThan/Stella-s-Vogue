@@ -1,0 +1,24 @@
+<template>
+    <div>
+        <h2>Visa Information</h2>
+        <p>{{ data.info }}</p>
+
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus quos animi cum unde ut soluta deleniti magnam tenetur, mollitia repudiandae eveniet, et quasi amet natus, voluptatum distinctio quidem voluptatibus a. Placeat facilis reiciendis magni, laborum quod ipsam neque sapiente inventore aspernatur aliquid veniam itaque at repellendus eveniet dolor ratione dolore ipsa deserunt quibusdam! Excepturi soluta ipsa debitis voluptatum ipsum ducimus architecto similique, earum recusandae optio adipisci rerum eius ratione distinctio libero fuga aperiam est cumque deleniti repellat, at iusto error voluptates dolorum? Magnam nemo deserunt perferendis tempora alias porro deleniti, in nihil consequatur atque mollitia cumque praesentium at ab quis voluptate odio dolorem molestiae quam doloribus fugiat voluptates. Ipsum accusantium totam ut voluptatum in architecto veritatis atque! Qui id minus laudantium aut molestiae ex, dignissimos soluta atque quos dolorem accusamus facere pariatur delectus quas fugit natus numquam inventore, necessitatibus, omnis enim exercitationem voluptate praesentium suscipit! Harum nemo consectetur rem consequatur officiis eligendi blanditiis animi quis. Provident odit veniam iure eius aperiam dignissimos facilis autem nobis sit laboriosam, tempora dolorem sapiente recusandae quam in. Optio laboriosam voluptatem vitae, quaerat veritatis quas illum cum numquam, possimus, voluptas fugiat necessitatibus aliquam incidunt suscipit quod? Amet quasi repudiandae consequuntur provident nemo? Necessitatibus officiis similique itaque, repellendus odit rem natus odio ut pariatur alias. Dignissimos quibusdam similique temporibus perferendis harum accusamus pariatur fuga aliquid ipsam. Nobis sequi ipsa officiis delectus quam maxime, hic voluptas nemo reiciendis magnam modi veritatis molestias nihil, mollitia, fuga earum? Sapiente, nesciunt doloribus sequi labore, quod ducimus non explicabo corporis consectetur debitis fugiat, officia error hic consequuntur iusto! Distinctio inventore quod nobis voluptates illo perspiciatis amet doloribus. Sint, ipsum saepe doloribus porro ratione inventore distinctio recusandae, nobis ut sit dolor? Placeat quos iure libero illum veniam? Temporibus consectetur sunt incidunt fugit nesciunt atque, ex quia nobis commodi, similique at veniam necessitatibus, dignissimos non modi ullam optio maiores odit molestias laborum autem totam? Est atque quam beatae, optio eaque natus ex hic nobis, libero iusto ducimus reiciendis nostrum magnam placeat architecto illo? Cumque deserunt officia quo, quam consequuntur odit harum doloribus sint suscipit, nisi recusandae quos cupiditate. Iure, omnis ab quos adipisci quia in maxime quo reiciendis neque voluptatum, cupiditate et amet? Vero quia officia aspernatur odio modi, excepturi sequi deleniti? Iusto ratione tempore recusandae commodi minima nulla cumque accusamus quisquam dicta corrupti dolorum quas est harum sapiente molestiae qui, ipsam itaque? In soluta illum ducimus delectus iure voluptatum architecto libero quo, doloribus quidem minima, et iusto nemo debitis deserunt modi repellat officia porro, quasi rem necessitatibus? Eaque quo dolor, itaque vitae maxime consequuntur error voluptas ipsam dolorem libero, saepe distinctio ipsum voluptatibus hic corporis inventore, recusandae omnis sapiente atque repellat repudiandae veritatis. Vel blanditiis necessitatibus cum, reiciendis ipsum in unde aperiam inventore a quasi, adipisci beatae architecto eius tenetur vitae eum esse? Quia optio delectus mollitia ab fugit consectetur quibusdam! Impedit eos necessitatibus beatae odit atque? Quam iste mollitia deserunt repellendus cumque doloremque ex optio quis recusandae laborum amet consequuntur esse, totam, doloribus laudantium. Quis ut nam sequi saepe tenetur est, error assumenda sapiente nemo adipisci velit ea. Harum ducimus deserunt vel accusantium, dolore sequi saepe est magnam tempore qui, cumque temporibus inventore eligendi provident error sit eos veritatis exercitationem maxime quis nostrum fugiat. Magnam quisquam possimus nisi labore laudantium rerum adipisci vitae, natus, et, quibusdam architecto. Aliquam officiis reprehenderit ipsum totam repellat non soluta nulla fuga eligendi magnam beatae, numquam, eius, voluptate corrupti atque. Sed facilis dolor animi quaerat dolorem deleniti ipsa, consequuntur esse non eius veritatis atque consequatur possimus provident maiores ducimus fuga ab repellat harum doloremque cum? Ab corporis, unde ad saepe modi iure mollitia sequi ipsam illum.
+        </p>
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        data: {
+            type: Object,
+            required: true
+        }
+    }
+};
+</script>
+
+  <style scoped>
+  </style>
