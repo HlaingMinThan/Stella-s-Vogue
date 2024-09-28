@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Collection;
 use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -35,5 +36,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'staff@gmail.com',
             'role_id' => $staff->id
         ]);
+
+        Collection::factory(10)->create();
     }
 }

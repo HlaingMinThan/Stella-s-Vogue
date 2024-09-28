@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
+            $table->integer("name");
             $table->integer("fabric");
             $table->integer("under");
             $table->integer("sample_pattern");

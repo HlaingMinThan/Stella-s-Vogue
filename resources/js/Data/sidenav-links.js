@@ -7,15 +7,23 @@ export default function getSideNavLinks()
             title: 'Dashboard',
             component: 'Admin/Dashboard',
             url:'/admin/dashboard',
-            allowedRoles: ['admin','super_admin','accounting','officer_access']
+            allowedRoles: ['admin']
         },
-        // {
-        //     icon: 'fa-users',
-        //     path: route('admin.users.index'),
-        //     title: 'Manage Users',
-        //     component: 'Admin/Users/Index',
-        //     url:'/admin/users',
-        //     allowedRoles: ['admin','super_admin']
-        // },
+        {
+            icon: 'fa-users',
+            path: route('admin.collections.index'),
+            title: 'Manage Collections',
+            component: 'Admin/Collections/Index',
+            url:'/admin/collections',
+            allowedRoles: ['admin']
+        },
+        {
+            icon: 'fa-users',
+            path: route('admin.orders.index'),
+            title: 'Manage Orders',
+            component: 'Admin/Orders/Index',
+            url:'/admin/orders',
+            allowedRoles: ['admin','staff']
+        },
     ];
 };

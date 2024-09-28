@@ -26,7 +26,7 @@ const handleLogout=()=>{
         svgIcon: 'question',
         allowClickOutside:true,
         onConfirm: () => {
-            router.post(route('logout'),{},{
+            router.post(route('admin.logout'),{},{
                 onFinish:()=>{
                     emitter.emit('close-confirmation-dialog');
                 }
