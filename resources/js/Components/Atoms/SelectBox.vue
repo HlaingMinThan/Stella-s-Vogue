@@ -1,57 +1,57 @@
 <template>
     <div
-      v-if="multiObjectKeys"
+        v-if="multiObjectKeys"
     >
-      <v-select
-        :filter="fuseSearch"
-      >
-        <template #option="{ name, email }">
-          <p>{{ name }} ({{ email }})</p>
-        </template>
-      </v-select>
+        <v-select
+            :filter="fuseSearch"
+        >
+            <template #option="{ name, email }">
+                <p>{{ name }} ({{ email }})</p>
+            </template>
+        </v-select>
     </div>
     <div>
-      <v-select
-        class="select"
-        :class="selectBoxClass"
-        v-bind="$attrs"
-        :taggable="taggable"
-      />
+        <v-select
+            class="select"
+            :class="selectBoxClass"
+            v-bind="$attrs"
+            :taggable="taggable"
+        />
     </div>
-  </template>
+</template>
   
-  <script>
-  import 'vue-select/dist/vue-select.css';
-  import vSelect from 'vue-select';
-  import Fuse from 'fuse.js';
+<script>
+import 'vue-select/dist/vue-select.css';
+import vSelect from 'vue-select';
+import Fuse from 'fuse.js';
   
-  export default {
-      components:{
-          vSelect
-      },
-      props: {
-          multiObjectKeys: {
-              type: Boolean,
-          },
-          selectBoxClass: String,
-          taggable: {
-              type: Boolean,
-              default: false
-          }
-      },
-      methods: {
-          fuseSearch(options, search) {
-              const fuse = new Fuse(options, {
-                  keys: ['id','name','email'],
-                  shouldSort: true,
-              });
-              return search.length
-                  ? fuse.search(search).map(({ item }) => item)
-                  : fuse.list;
-          },
-      }
-  };
-  </script>
+export default {
+    components:{
+        vSelect
+    },
+    props: {
+        multiObjectKeys: {
+            type: Boolean,
+        },
+        selectBoxClass: String,
+        taggable: {
+            type: Boolean,
+            default: false
+        }
+    },
+    methods: {
+        fuseSearch(options, search) {
+            const fuse = new Fuse(options, {
+                keys: ['id','name','email'],
+                shouldSort: true,
+            });
+            return search.length
+                ? fuse.search(search).map(({ item }) => item)
+                : fuse.list;
+        },
+    }
+};
+</script>
   
   <style>
   /* .v-select{

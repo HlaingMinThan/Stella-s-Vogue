@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function  index()
+    public function index()
     {
         request()->validate([
             'collection_id' => 'nullable|exists:collections,id',
@@ -26,6 +27,20 @@ class OrderController extends Controller
                 })
                 ->latest()->paginate(10),
             'old_selected_collection' => +request('collection_id')
+        ]);
+    }
+
+    public function create()
+    {
+        return inertia("Admin/Orders/Create", [
+            'collections' => \App\Models\Collection::latest()->get(),
+        ]);
+    }
+    public function edit(Order $order)
+    {
+        return inertia("Admin/Orders/Edit", [
+            'collections' => \App\Models\Collection::latest()->get(),
+            'order' => $order
         ]);
     }
 }

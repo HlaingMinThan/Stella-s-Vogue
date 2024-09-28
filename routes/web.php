@@ -7,6 +7,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Middleware\MustBeAdminMiddleware;
 use App\Http\Middleware\MustBeAuthUser;
+use App\Http\Middleware\MustBeGuestUser;
 use App\Http\Middleware\MustBeStaffUser;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,7 @@ Route::get('/', function () {
 
 
 Route::controller(LoginController::class)
-    ->middleware('guest')
+    ->middleware(MustBeGuestUser::class)
     ->prefix('/admin/login')
     ->group(function () {
         Route::get('/', 'create')->name('admin.login');
@@ -41,9 +42,9 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index')->middleware(MustBeAdminMiddleware::class);
         Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create')->middleware(MustBeAdminMiddleware::class);
         Route::post('orders/store', [OrderController::class, 'store'])->name('orders.store')->middleware(MustBeAdminMiddleware::class);
-        Route::get('orders/{collection}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(MustBeAdminMiddleware::class);
-        Route::put('orders/{collection}/update', [OrderController::class, 'update'])->name('orders.update')->middleware(MustBeAdminMiddleware::class);
-        Route::delete('orders/{collection}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
+        Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(MustBeAdminMiddleware::class);
+        Route::put('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware(MustBeAdminMiddleware::class);
+        Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
 
 
 
