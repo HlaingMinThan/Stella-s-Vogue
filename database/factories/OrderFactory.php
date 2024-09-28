@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Collection;
+use App\Models\Delivery;
+use App\Static\PaymentOption;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,15 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'collection_id' => Collection::factory(), // Assuming you have a Collection factory
+            'color' => fake()->colorName,
+            'name' => fake()->name,
+            'address' => fake()->address,
+            'phone' => fake()->phoneNumber,
+            'payment' => fake()->randomElement(PaymentOption::all()), // Adjust if needed
+            'screenshot' => fake()->imageUrl, // Example for image URL; adjust as needed
+            'delivery_id' => fake()->randomElement(Delivery::pluck('id')), // Assuming you have delivery IDs 1 to 10
+            'notes' => fake()->sentence,
         ];
     }
 }

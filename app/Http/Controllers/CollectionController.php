@@ -30,6 +30,7 @@ class CollectionController extends Controller
                     'taxi_charges' => $collection->taxi_charges,
                     'stock' => $collection->stock,
                     'sum' => $collection->sum, // Access the virtual property
+                    'deletable' => !$collection->orders->count(),
                 ]),
         ]);
     }
@@ -96,5 +97,11 @@ class CollectionController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('admin.collections.index')->with('success', 'Collection updated successfully!');
+    }
+
+    public function destroy(Collection $collection)
+    {
+        $collection->delete();
+        return back()->with('success', 'Collection deleted successfully!');
     }
 }

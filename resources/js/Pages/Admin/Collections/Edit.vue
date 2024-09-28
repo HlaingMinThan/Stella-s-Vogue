@@ -22,7 +22,7 @@
       CollectionForm,
       Breadcrumb,
       BreadcrumbItem,
-    },
+    }
   };
   </script>
   

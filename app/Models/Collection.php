@@ -17,4 +17,9 @@ class Collection extends Model
             + $this->phone_bill + $this->packing_fees + $this->extra_charges
             + $this->taxi_charges + $this->ga__vlog_charges;
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'collection_id');
+    }
 }

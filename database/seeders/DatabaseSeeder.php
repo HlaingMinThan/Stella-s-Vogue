@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Collection;
+use App\Models\Delivery;
+use App\Models\Order;
 use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,8 +17,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $admin = Role::create([
             'name' => 'Admin',
             'slug' => 'admin',
@@ -37,6 +37,24 @@ class DatabaseSeeder extends Seeder
             'role_id' => $staff->id
         ]);
 
-        Collection::factory(10)->create();
+        Delivery::create([
+            'name' => "Royal Express",
+            "slug" => 'royal_express',
+        ]);
+        Delivery::create([
+            'name' => "S.O",
+            "slug" => 's_o',
+        ]);
+
+        Collection::factory()
+            ->count(10)
+            ->create()
+            ->each(function ($collection) {
+                Order::factory()
+                    ->count(3)
+                    ->create([
+                        'collection_id' => $collection->id, // Associate orders with the current collection
+                    ]);
+            });
     }
 }

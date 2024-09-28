@@ -67,13 +67,34 @@
                 <TableDataCell><span class="font-bold">{{ item.stock }}</span></TableDataCell>
                 <TableActionCell>
                   <InertiaLinkButton
-                                        :href="route('admin.collections.edit', { collection: item?.id })"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
-                                    >
-                                        <i class="fa-solid fa-edit"></i>
-                                        Edit
-                                    </InertiaLinkButton>
-
+                    :preserve-scroll="false"
+                        :href="route('admin.collections.edit', { collection: item?.id })"
+                        class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                        Edit
+                    </InertiaLinkButton>
+                    <NormalButton
+                        v-if="item.deletable"
+                        type="button"
+                        @click="
+                            destroy(
+                                'Membership',
+                                route('admin.collections.destroy', { collection: item?.id })
+                            )
+                        "
+                        class="bg-red-600 hover:bg-red-700 text-white !text-xs !font-semibold"
+                    >
+                        <i class="fa-solid fa-ban"></i>
+                        Delete
+                    </NormalButton>
+                    <InertiaLinkButton
+                        :href="route('admin.orders.index', { collection_id: item?.id })"
+                        class="bg-yellow-600 hover:bg-yellow-700 text-white !text-xs !font-semibold"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                        Orders
+                    </InertiaLinkButton>
                 </TableActionCell>
               </template>
             </Table>
@@ -97,10 +118,12 @@ import TableDataCell from '@/Components/Molecules/TableDataCell.vue';
 import TableActionCell from '@/Components/Molecules/TableActionCell.vue';
 import NormalButton from '@/Components/Atoms/NormalButton.vue';
 import formatMoney from '@/Helpers/formatMoney';
+import { emitter } from '@/Helpers/emitter';
+import { Link } from '@inertiajs/vue3';
 
 export default {
   props: {
-    collections: Array, // This will receive the data directly from the backend
+    collections: Array,Link // This will receive the data directly from the backend
   },
   components: {
     Breadcrumb,
@@ -116,14 +139,25 @@ export default {
   },
   methods: {
     formatMoney,
-    deleteCollection(id) {
-      if (confirm("Are you sure you want to delete this collection?")) {
-        // Handle deletion via Inertia request
-        this.$inertia.delete(route('admin.collections.destroy', { collection: id }), {
-          preserveScroll: true, // This will preserve the scroll position after delete
+    async destroy(model, url, confirmationOptions = null){
+        emitter.emit('open-confirmation-dialog', {
+            title: "Are you sure you want to delete this " + model + "?",
+            body: "your data will be permanently deleted",
+            confirmLabel: 'Confirm',
+            cancelLabel: 'Cancel',
+            confirmBtnClass:'!bg-red-600',
+            svgIcon: 'warning',
+            onConfirm: () => {
+                this.$inertia.delete(url, {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        emitter.emit('close-confirmation-dialog');
+                        toast.success(model === 'Membership' ? 'Membership inactivated successfully.':`${model} deleted successfully.`);
+                    },
+                });
+            },
         });
-      }
-    },
+    }
   },
 };
 </script>

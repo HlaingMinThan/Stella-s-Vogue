@@ -8,6 +8,7 @@ import ConfirmationDialog from '@/Components/Molecules/ConfirmationDialog.vue';
 import InformationDialog from '@/Components/Molecules/InformationDialog.vue';
 
 const page = usePage();
+
 </script>
 
 <template>
