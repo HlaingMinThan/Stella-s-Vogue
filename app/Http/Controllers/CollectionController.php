@@ -11,7 +11,7 @@ class CollectionController extends Controller
     {
         return inertia("Admin/Collections/Index", [
             'collections' => Collection::where('name', 'like', '%' . request('search') . '%')
-                ->latest()
+                ->orderBy("updated_at", 'desc')
                 ->paginate(10)
                 ->through(fn($collection) => [
                     'id' => $collection->id,
@@ -38,6 +38,12 @@ class CollectionController extends Controller
     {
         return inertia("Admin/Collections/Create", []);
     }
+    public function edit(Collection $collection)
+    {
+        return inertia("Admin/Collections/Edit", [
+            'collection' => $collection
+        ]);
+    }
 
     public function store()
     {
@@ -63,5 +69,32 @@ class CollectionController extends Controller
 
         // Redirect back or to a specific route with success message
         return redirect()->route('admin.collections.index')->with('success', 'Collection created successfully!');
+    }
+
+    public function update(Request $request, Collection $collection)
+    {
+        // Validate the incoming data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'fabric' => 'required|numeric|min:0',
+            'under' => 'required|numeric|min:0',
+            'sample_pattern' => 'required|numeric|min:0',
+            'sew_fees' => 'required|numeric|min:0',
+            'model_fees' => 'required|numeric|min:0',
+            'model_deli_fees' => 'required|numeric|min:0',
+            'boosting' => 'required|numeric|min:0',
+            'phone_bill' => 'required|numeric|min:0',
+            'packing_fees' => 'required|numeric|min:0',
+            'extra_charges' => 'required|numeric|min:0',
+            'taxi_charges' => 'required|numeric|min:0',
+            'ga__vlog_charges' => 'required|numeric|min:0',
+            'stock' => 'required|numeric|min:0',
+        ]);
+
+        // Update the collection with validated data
+        $collection->update($validatedData);
+
+        // Redirect back with a success message
+        return redirect()->route('admin.collections.index')->with('success', 'Collection updated successfully!');
     }
 }

@@ -66,7 +66,14 @@
                 <TableDataCell><span class="font-bold">{{ formatMoney(item.sum) }} MMK</span></TableDataCell>
                 <TableDataCell><span class="font-bold">{{ item.stock }}</span></TableDataCell>
                 <TableActionCell>
-                  <!-- Edit and Delete Buttons can be placed here if needed -->
+                  <InertiaLinkButton
+                                        :href="route('admin.collections.edit', { collection: item?.id })"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
+                                    >
+                                        <i class="fa-solid fa-edit"></i>
+                                        Edit
+                                    </InertiaLinkButton>
+
                 </TableActionCell>
               </template>
             </Table>

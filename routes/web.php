@@ -31,6 +31,8 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('collections', [CollectionController::class, 'index'])->name('collections.index')->middleware(MustBeAdminMiddleware::class);
         Route::get('collections/create', [CollectionController::class, 'create'])->name('collections.create')->middleware(MustBeAdminMiddleware::class);
         Route::post('collections/store', [CollectionController::class, 'store'])->name('collections.store')->middleware(MustBeAdminMiddleware::class);
+        Route::get('collections/{collection}/edit', [CollectionController::class, 'edit'])->name('collections.edit')->middleware(MustBeAdminMiddleware::class);
+        Route::put('collections/{collection}/update', [CollectionController::class, 'update'])->name('collections.update')->middleware(MustBeAdminMiddleware::class);
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index')->middleware(MustBeAdminMiddleware::class, MustBeStaffUser::class);
         Route::post('logout', [LogoutController::class, 'destroy'])
             ->name('logout');
