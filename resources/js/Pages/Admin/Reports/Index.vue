@@ -26,7 +26,9 @@
             <div
                 class="my-3 flex sm:flex-row space-y-5 sm:space-y-0 items-center justify-between"
             >
-                <div class="relative flex w-full space-x-5 justify-end">
+                <div
+                    class="relative grid grid-cols-1 md:grid-cols-3 w-full gap-3 justify-end items-center"
+                >
                     <div class="w-full">
                         <label
                             for="payment"
@@ -37,7 +39,7 @@
                             class="w-full bg-white"
                             v-model="form.payment"
                             placeholder="Choose payment"
-                            :options="['all',...payments]"
+                            :options="['all', ...payments]"
                             :reduce="(payment) => payment"
                             :get-option-label="(option) => `${option}`"
                         />
@@ -56,13 +58,28 @@
                             class="w-full bg-white"
                             v-model="form.delivery_id"
                             placeholder="Choose payment"
-                            :options="[{id:'all',name:'All'},...deliveries]"
+                            :options="[
+                                { id: 'all', name: 'All' },
+                                ...deliveries,
+                            ]"
                             :reduce="(delivery) => delivery.id"
                             :get-option-label="(option) => `${option.name}`"
                         />
                         <InputError
                             class="mt-2"
-                            :message="form.errors?.payment"
+                            :message="form.errors?.delivery_id"
+                        />
+                    </div>
+                    <div class="w-full">
+                        <label
+                            for="Month & Year Picker"
+                            class="block text-sm font-medium text-gray-700 mb-3"
+                            >Month & Year Picker</label
+                        >
+                        <Datepicker
+                            month-picker
+                            v-model="monthPicker"
+                            placeholder="Select from date and to date"
                         />
                     </div>
                 </div>
@@ -72,7 +89,7 @@
                     class="text-sm bg-red-700 text-white w-full"
                     @click="reset"
                 >
-                        Reset
+                    Reset
                 </NormalButton>
             </div>
 
@@ -129,6 +146,7 @@ import TableActionCell from "@/Components/Molecules/TableActionCell.vue";
 import NormalButton from "@/Components/Atoms/NormalButton.vue";
 import formatMoney from "@/Helpers/formatMoney";
 import SelectBox from "@/Components/Atoms/SelectBox.vue";
+import Datepicker from "@/Components/Atoms/Datepicker.vue";
 import { emitter } from "@/Helpers/emitter";
 
 export default {
@@ -138,6 +156,7 @@ export default {
         SelectBox,
         InertiaLinkButton,
         DashboardTableDataSearchBox,
+        Datepicker,
         TableContainer,
         Table,
         TableHeaderCell,
@@ -154,18 +173,36 @@ export default {
     data() {
         return {
             form: this.$inertia.form({
+                month: this.selected.month || null,
                 payment: this.selected.payment || null,
                 delivery_id: this.selected.delivery_id || null,
             }),
+            monthPicker: {
+                month: new Date().getMonth(),
+                year: new Date().getFullYear(),
+            },
         };
     },
     watch: {
-       "form.payment": function () {
+        "form.payment": function () {
             this.form.get(this.route("admin.reports.index"), {
                 preserveState: true,
             });
         },
         "form.delivery_id": function () {
+            this.form.get(this.route("admin.reports.index"), {
+                preserveState: true,
+            });
+        },
+        monthPicker: function () {
+            // Construct the month string with padding
+            const year = this.monthPicker.year;
+            const month = (this.monthPicker.month + 1)
+                .toString()
+                .padStart(2, "0"); // Ensure the month is two digits
+            this.form.month = `${year}-${month}`; // Use template literals for clarity
+
+            console.log(this.form.month); // Output: "YYYY-MM" format
             this.form.get(this.route("admin.reports.index"), {
                 preserveState: true,
             });
@@ -176,6 +213,10 @@ export default {
         reset() {
             this.form.payment = "all";
             this.form.delivery_id = "all";
+            this.monthPicker = {
+                month: new Date().getMonth(),
+                year: new Date().getFullYear(),
+            };
         },
         async destroy(model, url, confirmationOptions = null) {
             emitter.emit("open-confirmation-dialog", {
