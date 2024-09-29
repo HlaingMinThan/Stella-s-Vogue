@@ -26,7 +26,7 @@ class OrderController extends Controller
                 $formattedDate = $date->format('Y-m-d');
             }
         }
-
+        $collection = \App\Models\Collection::find(request('collection_id'));
         return inertia("Admin/Orders/Index", [
             'collections' => \App\Models\Collection::latest()->get(),
             'orders' => \App\Models\Order::with('collection', 'delivery')
@@ -44,7 +44,8 @@ class OrderController extends Controller
                     return $q->whereDate('created_at', $formattedDate);
                 })
                 ->latest()->paginate(10),
-            'old_selected_collection' => +request('collection_id'),
+            'old_selected_collection' => $collection?->id,
+            'collection' => $collection,
             'date' => $formattedDate
         ]);
     }

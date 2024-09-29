@@ -14,7 +14,8 @@
                 </InertiaLinkButton>
             </div>
         </div>
-
+        <h2 v-if="collection" class="text-center text-xl font-semibold my-3">{{ collection.name.toUpperCase() }} Collection Budget - {{ formatMoney(collection.sum) }} MMK</h2>
+        <h2 v-if="selected_collection" class="text-center text-xl font-semibold my-3">Collection total Order - {{ formatMoney(collection.order_total) }} MMK</h2>
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
             <h1 v-if="date" class="text-center text-2xl font-semibold my-3">Orders for {{ date }}</h1>
@@ -130,6 +131,7 @@ export default {
         NormalButton,
     },
     props: {
+        collection: Object, // This will receive the data directly from the backend
         date: String, // This will receive the data directly from the backend
         orders: Array, // This will receive the data directly from the backend
         collections: Array, // This will receive the data directly from the backend
