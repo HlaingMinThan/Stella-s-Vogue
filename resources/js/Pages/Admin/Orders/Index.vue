@@ -1,14 +1,14 @@
 <template>
     <div class="min-h-screen py-3 space-y-8">
-        <div class="flex flex-col sm:flex-row items-center justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-2" v-if="!date">
             <!-- Breadcrumb -->
             <Breadcrumb :icon="'fa-boxes'" :label="'Orders'" :href="route('admin.orders.index')">
                 <BreadcrumbItem :label="'Lists'" />
             </Breadcrumb>
 
             <!-- Create Button -->
-            <div class="min-w-[270px] flex items-center justify-end">
-                <InertiaLinkButton :href="route('admin.orders.create')">
+            <div class="min-w-[270px] md:flex items-center justify-end">
+                <InertiaLinkButton :href="route('admin.orders.create')" class="w-full md:w-auto bg-primary text-white">
                     <i class="fa-solid fa-file-circle-plus mr-1"></i>
                     Create
                 </InertiaLinkButton>
@@ -17,10 +17,11 @@
 
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
-            <div class="my-3 flex sm:flex-row space-y-5 sm:space-y-0 items-center justify-between">
+            <h1 v-if="date" class="text-center text-2xl font-semibold my-3">Orders for {{ date }}</h1>
+            <div class="my-3 flex flex-col md:flex-row space-y-5 sm:space-y-0 items-center justify-between" v-if="!date">
                 <div class="relative">
                     <SelectBox
-                        class="w-[300px]"
+                        class="w-[380px]"
                         v-model="selected_collection"
                         placeholder="Choose collection"
                         :options="collections"
@@ -129,6 +130,7 @@ export default {
         NormalButton,
     },
     props: {
+        date: String, // This will receive the data directly from the backend
         orders: Array, // This will receive the data directly from the backend
         collections: Array, // This will receive the data directly from the backend
         old_selected_collection: Number, // This will receive the data directly from the backend

@@ -44,7 +44,8 @@ class OrderController extends Controller
                     return $q->whereDate('created_at', $formattedDate);
                 })
                 ->latest()->paginate(10),
-            'old_selected_collection' => +request('collection_id')
+            'old_selected_collection' => +request('collection_id'),
+            'date' => $formattedDate
         ]);
     }
 

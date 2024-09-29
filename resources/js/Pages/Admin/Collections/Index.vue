@@ -1,14 +1,14 @@
 <template>
     <div class="min-h-screen py-3 space-y-8">
-        <div class="flex flex-col sm:flex-row items-center justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-2" v-if="!date">
             <!-- Breadcrumb -->
             <Breadcrumb :icon="'fa-boxes'" :label="'Collections'" :href="route('admin.collections.index')">
                 <BreadcrumbItem :label="'Lists'" />
             </Breadcrumb>
 
             <!-- Create Button -->
-            <div class="min-w-[270px] flex items-center justify-end">
-                <InertiaLinkButton :href="route('admin.collections.create')">
+            <div class="min-w-[270px] md:flex items-center justify-end">
+                <InertiaLinkButton :href="route('admin.collections.create')" class="w-full md:w-auto bg-primary text-white">
                     <i class="fa-solid fa-file-circle-plus mr-1"></i>
                     Create
                 </InertiaLinkButton>

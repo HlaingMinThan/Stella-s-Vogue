@@ -24,14 +24,6 @@ export default function getSideNavLinks()
             component: 'Admin/Orders/Index',
             url:'/admin/orders',
             allowedRoles: ['admin','staff']
-        },
-        {
-            icon: 'fa-users',
-            path: route('admin.dashboard'),
-            title: 'Manage Reports',
-            component: 'Admin/Reports/Index',
-            url:'/admin/Reports',
-            allowedRoles: ['admin']
-        },
+        }
     ];
 };
