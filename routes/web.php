@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReportController;
 use App\Http\Middleware\MustBeAdminMiddleware;
 use App\Http\Middleware\MustBeAuthUser;
 use App\Http\Middleware\MustBeGuestUser;
@@ -45,6 +46,9 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(MustBeAdminMiddleware::class);
         Route::put('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware(MustBeAdminMiddleware::class);
         Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
+
+        //reports
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index')->middleware(MustBeAdminMiddleware::class);
 
 
 

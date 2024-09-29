@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('payment', PaymentOption::all());
             $table->string('screenshot')->nullable();
             $table->unsignedBigInteger('delivery_id');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->decimal('amount', 8, 2)->default(0);
             $table->timestamps();
         });

@@ -12,20 +12,20 @@ return new class extends Migration {
     {
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
-            $table->integer("name");
-            $table->integer("fabric");
-            $table->integer("under");
-            $table->integer("sample_pattern");
-            $table->integer("sew_fees");
-            $table->integer("model_fees");
-            $table->integer("model_deli_fees");
-            $table->integer("boosting");
-            $table->integer("phone_bill");
-            $table->integer("packing_fees");
-            $table->integer("extra_charges");
-            $table->integer("taxi_charges");
-            $table->integer("ga__vlog_charges");
-            $table->integer("stock");
+            $table->string("name");
+            $table->decimal("fabric")->default(0);
+            $table->decimal("under")->default(0);
+            $table->decimal("sample_pattern")->default(0);
+            $table->decimal("sew_fees")->default(0);
+            $table->decimal("model_fees")->default(0);
+            $table->decimal("model_deli_fees")->default(0);
+            $table->decimal("boosting")->default(0);
+            $table->decimal("phone_bill")->default(0);
+            $table->decimal("packing_fees")->default(0);
+            $table->decimal("extra_charges")->default(0);
+            $table->decimal("taxi_charges")->default(0);
+            $table->decimal("ga__vlog_charges")->default(0);
+            $table->decimal("stock")->default(0);
             $table->timestamps();
         });
     }

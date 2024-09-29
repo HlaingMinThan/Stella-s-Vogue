@@ -37,24 +37,134 @@ class DatabaseSeeder extends Seeder
             'role_id' => $staff->id
         ]);
 
-        Delivery::create([
+        $royal = Delivery::create([
             'name' => "Royal Express",
             "slug" => 'royal_express',
         ]);
-        Delivery::create([
+        $so = Delivery::create([
             'name' => "S.O",
             "slug" => 's_o',
         ]);
 
-        Collection::factory()
-            ->count(10)
-            ->create()
-            ->each(function ($collection) {
-                Order::factory()
-                    ->count(3)
-                    ->create([
-                        'collection_id' => $collection->id, // Associate orders with the current collection
-                    ]);
-            });
+        $olivia = Collection::factory()
+            ->create([
+                'name' => 'olivia'
+            ]);
+        //kpay 2 ways with royal on september 20000
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'hlaing min',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $royal->id,
+            'payment' => 'kpay',
+            'amount' => '10000',
+            'created_at' => '2024-09-01'
+        ]);
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'aungaung',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $royal->id,
+            'payment' => 'kpay',
+            'amount' => '10000',
+            'created_at' => '2024-09-01'
+        ]);
+        //wave 3 ways with royal on september
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'mgmg',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $royal->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-02'
+        ]);
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'mgmg',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $royal->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-05'
+        ]);
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'mgmg',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $royal->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-02'
+        ]);
+
+        //kpay 1 ways with so on september
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'hlaing min 2',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $so->id,
+            'payment' => 'kpay',
+            'amount' => '10000',
+            'created_at' => '2024-09-02'
+        ]);
+
+        //wave 4 ways with so on sep
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'hlaing min 2',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $so->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-02'
+        ]);
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'hlaing min 2',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $so->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-02'
+        ]);
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'hlaing min 2',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $so->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-10'
+        ]);
+        Order::factory()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'name' => 'hlaing min 2',
+            'address' => 'yangon',
+            'phone' => '09942377',
+            'delivery_id' => $so->id,
+            'payment' => 'wave',
+            'amount' => '10000',
+            'created_at' => '2024-09-02'
+        ]);
     }
 }
