@@ -29,11 +29,11 @@ class ReportController extends Controller
             })
             // Apply the payment filter if present and not 'all'
             ->when($payment && $payment !== 'all', function ($query) use ($payment) {
-                return $query->where('orders.payment', $payment);
+                return $query->where('orders.payment', $payment === "all" ? null : $payment);
             })
             // Apply the delivery method filter if present
-            ->when($delivery, function ($query, $delivery) {
-                return $query->where('orders.delivery_id', $delivery);
+            ->when($delivery && $delivery !== "all", function ($query) use ($delivery) {
+                return $query->where('orders.delivery_id', $delivery === "all" ? null : $delivery);
             })
             ->groupBy(DB::raw('DATE(orders.created_at)'))  // Group by date from orders table
             ->orderBy(DB::raw('DATE(orders.created_at)'), 'DESC')  // Order by date in descending order
