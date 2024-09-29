@@ -29,7 +29,8 @@ Route::middleware(MustBeAuthUser::class)
     ->prefix('/admin')
     ->name("admin.")
     ->group(function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(MustBeAdminMiddleware::class);
+        //reports
+        Route::get('/dashboard', [ReportController::class, 'index'])->name('dashboard')->middleware(MustBeAdminMiddleware::class);
 
         // collections
         Route::get('collections', [CollectionController::class, 'index'])->name('collections.index')->middleware(MustBeAdminMiddleware::class);
@@ -46,10 +47,6 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(MustBeAdminMiddleware::class);
         Route::put('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware(MustBeAdminMiddleware::class);
         Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
-
-        //reports
-        Route::get('reports', [ReportController::class, 'index'])->name('reports.index')->middleware(MustBeAdminMiddleware::class);
-
 
 
         Route::post('logout', [LogoutController::class, 'destroy'])

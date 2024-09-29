@@ -5,7 +5,7 @@
             <Breadcrumb
                 :icon="'fa-boxes'"
                 :label="'Reports'"
-                :href="route('admin.reports.index')"
+                :href="route('admin.dashboard')"
             >
                 <BreadcrumbItem :label="'Lists'" />
             </Breadcrumb>
@@ -110,6 +110,10 @@
                                     label="Total Ways"
                                     class="min-w-[120px]"
                                 />
+                                <TableHeaderCell
+                                    label="View Orders"
+                                    class="min-w-[120px]"
+                                />
                             </template>
 
                             <template #table-data="{ item }">
@@ -123,6 +127,16 @@
                                 <TableDataCell>{{
                                     item.total_ways
                                 }}</TableDataCell>
+                                <TableDataCell>
+                                    <InertiaLinkButton
+                                        :href="route('admin.orders.index', {date : item.date})"
+                                    >
+                                        <i
+                                            class="fa-solid fa-file-circle-plus mr-1"
+                                        ></i>
+                                        view orders
+                                    </InertiaLinkButton>
+                                </TableDataCell>
                             </template>
                         </Table>
                     </div>
@@ -185,12 +199,12 @@ export default {
     },
     watch: {
         "form.payment": function () {
-            this.form.get(this.route("admin.reports.index"), {
+            this.form.get(this.route("admin.dashboard"), {
                 preserveState: true,
             });
         },
         "form.delivery_id": function () {
-            this.form.get(this.route("admin.reports.index"), {
+            this.form.get(this.route("admin.dashboard"), {
                 preserveState: true,
             });
         },
@@ -203,7 +217,7 @@ export default {
             this.form.month = `${year}-${month}`; // Use template literals for clarity
 
             console.log(this.form.month); // Output: "YYYY-MM" format
-            this.form.get(this.route("admin.reports.index"), {
+            this.form.get(this.route("admin.dashboard"), {
                 preserveState: true,
             });
         },

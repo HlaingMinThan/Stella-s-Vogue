@@ -50,6 +50,7 @@
                                 <TableHeaderCell label="screenshot" class="min-w-[150px]" />
                                 <TableHeaderCell label="Delivery" class="min-w-[150px]" />
                                 <TableHeaderCell label="notes" class="min-w-[150px]" />
+                                <TableHeaderCell label="Date" class="min-w-[150px]" />
                                 <TableHeaderCell label="Actions"  />
                             </template>
 
@@ -64,6 +65,7 @@
                                 <TableDataCell>{{ item.screenshot }}</TableDataCell>
                                 <TableDataCell>{{ item.delivery.name }}</TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.notes }}</p></TableDataCell>
+                                <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.created_at }}</p></TableDataCell>
                                 <TableActionCell>
                                     <InertiaLinkButton
                                         :href="route('admin.orders.edit', { order: item?.id })"

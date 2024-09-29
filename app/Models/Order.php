@@ -9,6 +9,10 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'created_at' => "datetime:d-m-y"
+    ];
+
     public function collection()
     {
         return $this->belongsTo(Collection::class, 'collection_id');

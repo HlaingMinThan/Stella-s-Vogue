@@ -18,7 +18,7 @@ class ReportController extends Controller
         $delivery = request('delivery_id'); //royal
 
         $reports = Order::select(
-            DB::raw('DATE(orders.created_at) as date'),  // Specify the table for created_at
+            DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y') as date"),  // Format date to DD-MM-YY
             DB::raw('SUM(orders.amount) as total_order_amount'),  // Specify the table for amount
             DB::raw('COUNT(orders.id) as total_ways')  // Count the total number of orders (not distinct deliveries)
         )
@@ -35,12 +35,12 @@ class ReportController extends Controller
             ->when($delivery && $delivery !== "all", function ($query) use ($delivery) {
                 return $query->where('orders.delivery_id', $delivery === "all" ? null : $delivery);
             })
-            ->groupBy(DB::raw('DATE(orders.created_at)'))  // Group by date from orders table
-            ->orderBy(DB::raw('DATE(orders.created_at)'), 'DESC')  // Order by date in descending order
+            ->groupBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"))  // Group by formatted date
+            ->orderBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"), 'DESC')  // Order by formatted date
             ->paginate(10);
 
 
-        return inertia('Admin/Reports/Index', [
+        return inertia('Admin/Dashboard', [
             'reports' => $reports,
             'deliveries' => Delivery::all(),
             'payments' => PaymentOption::all(),

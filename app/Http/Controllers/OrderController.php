@@ -6,6 +6,7 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Delivery;
 use App\Models\Order;
 use App\Static\PaymentOption;
+use DateTime;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -15,6 +16,17 @@ class OrderController extends Controller
         request()->validate([
             'collection_id' => 'nullable|exists:collections,id',
         ]);
+
+        $dateInput = request('date');
+        $formattedDate = null;
+
+        if ($dateInput) {
+            $date = DateTime::createFromFormat('d-m-y', $dateInput);
+            if ($date) {
+                $formattedDate = $date->format('Y-m-d');
+            }
+        }
+
         return inertia("Admin/Orders/Index", [
             'collections' => \App\Models\Collection::latest()->get(),
             'orders' => \App\Models\Order::with('collection', 'delivery')
@@ -27,6 +39,9 @@ class OrderController extends Controller
                         ->orWhere('phone', 'like', '%' . request('search') . '%')
                         ->orWhere('address', 'like', '%' . request('search') . '%')
                         ->orWhere('color', 'like', '%' . request('search') . '%');
+                })
+                ->when($formattedDate, function ($q) use ($formattedDate) {
+                    return $q->whereDate('created_at', $formattedDate);
                 })
                 ->latest()->paginate(10),
             'old_selected_collection' => +request('collection_id')
