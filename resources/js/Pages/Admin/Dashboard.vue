@@ -170,6 +170,8 @@ export default {
         NormalButton,
     },
     props: {
+        stats: Object,
+        selected: Object,
         selected: Object,
         reports: Array, // This will receive the data directly from the backend
         deliveries: Array, // This will receive the data directly from the backend
@@ -177,12 +179,6 @@ export default {
     },
     data() {
         return {
-            stats: {
-                total_orders: 1,
-                total_today_order_income: 1,
-                total_today_ways: 1,
-                total_latest_collection_stat: 1,
-            },
             form: this.$inertia.form({
                 month: this.selected.month || null,
                 payment: this.selected.payment || null,
@@ -253,6 +249,9 @@ export default {
             });
         },
     },
+    mounted() {
+        console.log(this.stats)
+    }
 };
 </script>
 

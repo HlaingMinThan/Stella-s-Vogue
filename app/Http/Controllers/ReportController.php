@@ -48,6 +48,12 @@ class ReportController extends Controller
                 'month' => $month,
                 'payment' => $payment
             ],
+            "stats" => [
+                "total_orders" => 1,
+                "total_today_order_income" => 1,
+                "total_today_ways" => 1,
+                "total_latest_collection_stat" => 1,
+            ],
             'selected' => [
                 'month' => $month,
                 'payment' => $payment,

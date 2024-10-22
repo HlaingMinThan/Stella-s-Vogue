@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
