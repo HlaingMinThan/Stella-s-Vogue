@@ -41,7 +41,7 @@ Route::middleware(MustBeAuthUser::class)
         Route::delete('collections/{collection}/destroy', [CollectionController::class, 'destroy'])->name('collections.destroy')->middleware(MustBeAdminMiddleware::class);
 
         // orders
-        Route::get('orders', [OrderController::class, 'index'])->name('orders.index')->middleware(MustBeAdminMiddleware::class);
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index')->middleware([MustBeStaffUser::class]);
         Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create')->middleware(MustBeAdminMiddleware::class);
         Route::post('orders/store', [OrderController::class, 'store'])->name('orders.store')->middleware(MustBeAdminMiddleware::class);
         Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(MustBeAdminMiddleware::class);

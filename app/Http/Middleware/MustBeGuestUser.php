@@ -16,7 +16,12 @@ class MustBeGuestUser
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check()) {
-            return to_route('admin.dashboard');
+            if (auth()->user()->isAdmin()) {
+                return to_route('admin.dashboard');
+            }
+            if (auth()->user()->isStaff()) {
+                return to_route('admin.orders.index');
+            }
         }
         return $next($request);
     }

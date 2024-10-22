@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen py-3 space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-2" v-if="!date">
+        <div class="grid grid-cols-1 md:grid-cols-2" v-if="!date && !selected_collection">
             <!-- Breadcrumb -->
             <Breadcrumb :icon="'fa-boxes'" :label="'Orders'" :href="route('admin.orders.index')">
                 <BreadcrumbItem :label="'Lists'" />
@@ -14,8 +14,11 @@
                 </InertiaLinkButton>
             </div>
         </div>
-        <h2 v-if="collection" class="text-center text-xl font-semibold my-3">{{ collection.name.toUpperCase() }} Collection Budget - {{ formatMoney(collection.sum) }} MMK</h2>
-        <h2 v-if="selected_collection" class="text-center text-xl font-semibold my-3">Collection total Order - {{ formatMoney(collection.order_total) }} MMK</h2>
+        <template v-if="collection">
+            <h1  class="text-center text-2xl font-semibold my-3 text-primary"> {{ collection.name.toUpperCase() }} Collection Orders</h1>
+            <h2  class="text-center text-lg font-semibold my-3">Budget - {{ formatMoney(collection.sum) }} MMK</h2>
+            <h2  class="text-center text-lg font-semibold my-3">Collection total Order - {{ formatMoney(collection.order_total) }} MMK</h2>
+        </template>
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
             <h1 v-if="date" class="text-center text-2xl font-semibold my-3">Orders for {{ date }}</h1>
@@ -68,7 +71,7 @@
                                 <TableDataCell>{{ item.delivery.name }}</TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.notes }}</p></TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.created_at }}</p></TableDataCell>
-                                <TableActionCell>
+                                <TableActionCell v-if="item.editable">
                                     <InertiaLinkButton
                                         :href="route('admin.orders.edit', { order: item?.id })"
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"

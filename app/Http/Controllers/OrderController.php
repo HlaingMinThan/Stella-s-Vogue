@@ -43,7 +43,10 @@ class OrderController extends Controller
                 ->when($formattedDate, function ($q) use ($formattedDate) {
                     return $q->whereDate('created_at', $formattedDate);
                 })
-                ->latest()->paginate(10),
+                ->latest()->paginate(10)->through(fn($order) => [
+                    ...$order->toArray(),
+                    'editable' => auth()->user()->isAdmin()
+                ]),
             'old_selected_collection' => $collection?->id,
             'collection' => $collection,
             'date' => $formattedDate

@@ -27,8 +27,10 @@ class LoginController extends Controller
 
         if ($user && $user->role_id !== $userRole) {
             if (Auth::attempt($request->only('email', 'password'))) {
-                // $request->session()->regenerate();
-                return redirect()->intended(route('admin.dashboard', absolute: false));
+                if (Auth::user()->isAdmin()) {
+                    return to_route('admin.dashboard');
+                }
+                return to_route('admin.orders.index');
             } else {
                 return back()->withErrors([
                     'password' => 'The provided password is incorrect.',

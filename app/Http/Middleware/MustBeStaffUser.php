@@ -16,8 +16,7 @@ class MustBeStaffUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $staff = Role::where('slug', 'staff')->first();
-        if (!auth()->user()->role_id === $staff->id) {
+        if (!auth()->user()->isStaff() && !auth()->user()->isAdmin()) {
             abort(403);
         }
         return $next($request);

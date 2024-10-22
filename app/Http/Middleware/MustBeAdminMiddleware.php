@@ -16,8 +16,7 @@ class MustBeAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $admin = Role::where('slug', 'admin')->first();
-        if (!auth()->user()->role_id === $admin->id) {
+        if (!auth()->user()->isAdmin()) {
             abort(403);
         }
         return $next($request);
