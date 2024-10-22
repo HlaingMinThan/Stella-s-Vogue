@@ -6,7 +6,7 @@
 
         <!-- Table Start -->
         <div
-            class="p-10 relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3"
+            class="p-10 relative border border-gray-300 bg-gray-100 rounded-md shadow-sm shadow-gray-200 px-5 py-3 w-[95%] mx-auto"
         >
             <div
                 class="my-3 flex sm:flex-row space-y-5 sm:space-y-0 items-center justify-between"
