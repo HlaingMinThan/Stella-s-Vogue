@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Delivery;
 use App\Models\Order;
 use App\Static\PaymentOption;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -39,7 +40,6 @@ class ReportController extends Controller
             ->orderBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"), 'DESC')  // Order by formatted date
             ->paginate(10);
 
-
         return inertia('Admin/Dashboard', [
             'reports' => $reports,
             'deliveries' => Delivery::all(),
@@ -49,10 +49,8 @@ class ReportController extends Controller
                 'payment' => $payment
             ],
             "stats" => [
-                "total_orders" => 1,
-                "total_today_order_income" => 1,
-                "total_today_ways" => 1,
-                "total_latest_collection_stat" => 1,
+                "total_today_order_income" => Order::whereDate('created_at', Carbon::today())->sum('amount') . " MMK",
+                "total_today_ways" => Order::whereDate('created_at', Carbon::today())->count(),
             ],
             'selected' => [
                 'month' => $month,
