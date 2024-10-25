@@ -1,5 +1,16 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+
+import { useStore } from 'vuex';
+
+const store = useStore();
+const pageChange = (path) => {
+    store.commit('toggleSideNav',false);
+    router.get(path, {
+        preserveState: false,
+        preserveScroll: false,
+    });
+};
 
 defineProps({
     item: Object,
@@ -8,13 +19,15 @@ defineProps({
 
 <template>
     <div
+        @click="pageChange(item.path)"
         class=" w-full rounded-[4px] transition-all duration-150 mb-3"
         :class="[
             $page.url.startsWith(item.url) ? 'text-primary bg-lightBlue': 'hover:bg-yellow-700',
         ]"
     >
-        <Link
+        <button
             :href="item.path"
+            :preserve-scroll="false"
             class="relative flex items-center gap-2.5 rounded-sm py-3 px-4 font-semibold text-sm duration-300 ease-in-out"
         >
             <span v-if="item.icon">
@@ -22,6 +35,6 @@ defineProps({
             </span>
 
             {{ item.title }}
-        </Link>
+        </button>
     </div>
 </template>
