@@ -7,7 +7,6 @@ const store = useStore();
 const pageChange = (path) => {
     store.commit('toggleSideNav',false);
     router.get(path, {
-        preserveState: false,
         preserveScroll: false,
     });
 };
