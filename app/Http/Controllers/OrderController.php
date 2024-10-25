@@ -43,7 +43,7 @@ class OrderController extends Controller
                 ->when($formattedDate, function ($q) use ($formattedDate) {
                     return $q->whereDate('created_at', $formattedDate);
                 })
-                ->latest()->paginate(10)->through(fn($order) => [
+                ->latest()->paginate(10)->through(fn ($order) => [
                     ...$order->toArray(),
                     'editable' => auth()->user()->isAdmin()
                 ]),
@@ -99,5 +99,37 @@ class OrderController extends Controller
             'order' => $order,
             'deliveries' => Delivery::all(),
         ]);
+    }
+
+    public function update(OrderRequest $request, Order $order)
+    {
+        // Fill the order data
+        $order->name = $request->name;
+        $order->color = $request->color;
+        $order->address = $request->address;
+        $order->phone = $request->phone;
+        $order->payment = $request->payment;
+        $order->delivery_id = $request->delivery_id;
+        $order->notes = $request->notes;
+        $order->collection_id = $request->collection_id;
+        $order->amount = $request->amount;
+
+        // Handle file upload if a screenshot is provided
+        if ($request->hasFile('screenshot')) {
+            $filePath = $request->file('screenshot')->store('screenshots', 'public'); // Store in 'public/screenshots'
+            $order->screenshot = $filePath;
+        }
+
+        // Save the order to the database
+        $order->save();
+
+        // Return a response (could redirect or return JSON)
+        return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully!');
+    }
+
+    public function destroy(Order $order)
+    {
+        $order->delete();
+        return back()->with('success', 'Order deleted successfully!');
     }
 }

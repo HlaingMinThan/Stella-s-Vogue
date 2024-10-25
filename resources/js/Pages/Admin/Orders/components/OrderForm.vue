@@ -208,8 +208,7 @@ export default {
       const routeName = this.isEditMode
         ? "admin.orders.update"
         : "admin.orders.store";
-      const method = this.isEditMode ? "put" : "post";
-      await this.form[method](
+      await this.form.post(
         route(routeName, {
           order: this.isEditMode ? this.initialForm.id : null,
         })

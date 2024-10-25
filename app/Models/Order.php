@@ -18,6 +18,15 @@ class Order extends Model
         return $this->belongsTo(Collection::class, 'collection_id');
     }
 
+    public function getScreenshotAttribute($value)
+    {
+        if ($value) {
+            return asset('storage/' . $value);
+        }
+
+        return null;
+    }
+
     public function delivery()
     {
         return $this->belongsTo(Delivery::class, 'delivery_id');

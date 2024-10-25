@@ -67,7 +67,10 @@
                                 <TableDataCell>{{ item.phone }}</TableDataCell>
                                 <TableDataCell>{{ item.address }}</TableDataCell>
                                 <TableDataCell>{{ item.payment }}</TableDataCell>
-                                <TableDataCell>{{ item.screenshot }}</TableDataCell>
+                                <TableDataCell>
+                                    <img v-if="item.screenshot" :src="item.screenshot" class="w-12 h-12" @click="screenshot = item.screenshot;open=true">
+                                    <p v-else>-</p>
+                                </TableDataCell>
                                 <TableDataCell>{{ item.delivery.name }}</TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.notes }}</p></TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.created_at }}</p></TableDataCell>
@@ -85,7 +88,7 @@
                                         @click="
                                             destroy(
                                                 'Membership',
-                                                route('admin.orders.destroy', { collection: item?.id })
+                                                route('admin.orders.destroy', { order: item?.id })
                                             )
                                         "
                                         class="bg-red-600 hover:bg-red-700 text-white !text-xs !font-semibold"
@@ -96,6 +99,9 @@
                                 </TableActionCell>
                             </template>
                         </Table>
+                        <Modal :open="open"  @closeModal="open=false" :can-close-backdrop="true" >
+                            <img :src="screenshot" class="w-full h-[500px]" @click="open = true">
+                        </Modal>
                     </div>
                 </template>
             </TableContainer>
@@ -107,6 +113,7 @@
 <script>
 import Breadcrumb from '@/Components/Molecules/Breadcrumb.vue';
 import BreadcrumbItem from '@/Components/Atoms/BreadcrumbItem.vue';
+import Modal from '@/Components/Atoms/Modal.vue';
 import InertiaLinkButton from '@/Components/Atoms/InertiaLinkButton.vue';
 import DashboardTableDataSearchBox from '@/Components/Common/DashboardTableDataSearchBox.vue';
 import TableContainer from '@/Components/Molecules/TableContainer.vue';
@@ -132,6 +139,7 @@ export default {
         TableDataCell,
         TableActionCell,
         NormalButton,
+        Modal
     },
     props: {
         collection: Object, // This will receive the data directly from the backend
@@ -142,6 +150,8 @@ export default {
     },
     data(){
         return{
+            open: false,
+            screenshot:null,
             selected_collection: this.old_selected_collection || null
         };
     },

@@ -28,7 +28,6 @@ class OrderRequest extends FormRequest
             'address' => 'required|string|max:255',
             'phone' => 'required|numeric',
             'payment' => 'required|string|max:50',
-            'screenshot' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // 2MB max
             'delivery_id' => 'required|integer',
             'notes' => 'nullable|string|max:600',
             'amount' => 'required|numeric|min:0',
