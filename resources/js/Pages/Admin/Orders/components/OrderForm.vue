@@ -42,6 +42,18 @@
           />
           <InputError class="mt-2" :message="form.errors?.color" />
         </div>
+        <div>
+          <label for="size" class="block text-sm font-medium text-gray-700"
+            >Size</label
+          >
+          <input
+            v-model="form.size"
+            type="text"
+            id="size"
+            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
+          <InputError class="mt-2" :message="form.errors?.size" />
+        </div>
 
         <div>
           <label for="address" class="block text-sm font-medium text-gray-700"
@@ -129,6 +141,18 @@
           />
           <InputError class="mt-2" :message="form.errors?.amount" />
         </div>
+        <div>
+          <label for="deli_amount" class="block text-sm font-medium text-gray-700"
+            >Deli Amount</label
+          >
+          <input
+            v-model="form.deli_amount"
+            type="number"
+            id="deli_amount"
+            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          />
+          <InputError class="mt-2" :message="form.errors?.deli_amount" />
+        </div>
       </div>
       <div>
           <label for="notes" class="block text-sm font-medium text-gray-700"
@@ -170,6 +194,7 @@ export default {
       default: () => ({
         name: "",
         color: "",
+        size: "",
         address: "",
         phone: "",
         payment: "",
@@ -177,6 +202,7 @@ export default {
         delivery_id: null,
         notes: "",
         amount: 0,
+        deli_amount: 0,
       }),
     },
     collections: Array,
@@ -190,6 +216,7 @@ export default {
       form: this.$inertia.form({
         name: this.initialForm.name,
         color: this.initialForm.color,
+        size: this.initialForm.size,
         address: this.initialForm.address,
         phone: this.initialForm.phone,
         payment: this.initialForm.payment,
@@ -197,6 +224,7 @@ export default {
         delivery_id: this.initialForm.delivery_id,
         notes: this.initialForm.notes,
         amount: this.initialForm.amount,
+        deli_amount: this.initialForm.deli_amount,
         collection_id: this.initialForm.collection_id,
       }),
     };

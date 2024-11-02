@@ -48,6 +48,7 @@
                                 <TableHeaderCell label="Name" class="min-w-[180px]"/>
                                 <TableHeaderCell label="Collection Name" class="min-w-[300px]" />
                                 <TableHeaderCell label="Amount" class="min-w-[300px]" />
+                                <TableHeaderCell label="Deli Amount" class="min-w-[300px]" />
                                 <TableHeaderCell label="Phone" class="min-w-[150px]" />
                                 <TableHeaderCell label="Address" class="min-w-[180px]"/>
                                 <TableHeaderCell label="Payment" class="min-w-[150px]" />
@@ -62,8 +63,9 @@
                             <template #table-data="{ item }">
                                 <TableDataCell>{{ item.id }}</TableDataCell>
                                 <TableDataCell>{{ item.name }}</TableDataCell>
-                                <TableDataCell>{{ item.collection.name }} ({{ item.color }})</TableDataCell>
+                                <TableDataCell>{{ item.collection.name }} ({{ item.color }}/{{ item.size }})</TableDataCell>
                                 <TableDataCell>{{ formatMoney(item.amount) }}MMK</TableDataCell>
+                                <TableDataCell>{{ item.deli_amount? formatMoney(item.deli_amount) : 0 }}MMK</TableDataCell>
                                 <TableDataCell>{{ item.phone }}</TableDataCell>
                                 <TableDataCell>{{ item.address }}</TableDataCell>
                                 <TableDataCell>{{ item.payment }}</TableDataCell>

@@ -25,12 +25,14 @@ class OrderRequest extends FormRequest
             'name' => 'required|string|max:255',
             'collection_id' => 'required|exists:collections,id',
             'color' => 'required|string|max:50',
+            'size' => 'required|string|max:50',
             'address' => 'required|string|max:255',
             'phone' => 'required|numeric',
             'payment' => 'required|string|max:50',
             'delivery_id' => 'required|integer',
             'notes' => 'nullable|string|max:600',
             'amount' => 'required|numeric|min:0',
+            'deli_amount' => 'nullable|numeric|min:0',
         ];
     }
 }

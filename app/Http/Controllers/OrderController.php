@@ -43,7 +43,7 @@ class OrderController extends Controller
                 ->when($formattedDate, function ($q) use ($formattedDate) {
                     return $q->whereDate('created_at', $formattedDate);
                 })
-                ->latest()->paginate(10)->through(fn ($order) => [
+                ->latest()->paginate(10)->through(fn($order) => [
                     ...$order->toArray(),
                     'editable' => auth()->user()->isAdmin()
                 ]),
@@ -66,10 +66,10 @@ class OrderController extends Controller
     {
         // Create a new order instance
         $order = new Order();
-
         // Fill the order data
         $order->name = $request->name;
         $order->color = $request->color;
+        $order->size = $request->size;
         $order->address = $request->address;
         $order->phone = $request->phone;
         $order->payment = $request->payment;
@@ -77,6 +77,7 @@ class OrderController extends Controller
         $order->notes = $request->notes;
         $order->collection_id = $request->collection_id;
         $order->amount = $request->amount;
+        $order->deli_amount = $request->deli_amount;
 
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
@@ -106,6 +107,7 @@ class OrderController extends Controller
         // Fill the order data
         $order->name = $request->name;
         $order->color = $request->color;
+        $order->size = $request->size;
         $order->address = $request->address;
         $order->phone = $request->phone;
         $order->payment = $request->payment;
@@ -113,6 +115,7 @@ class OrderController extends Controller
         $order->notes = $request->notes;
         $order->collection_id = $request->collection_id;
         $order->amount = $request->amount;
+        $order->deli_amount = $request->deli_amount;
 
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
