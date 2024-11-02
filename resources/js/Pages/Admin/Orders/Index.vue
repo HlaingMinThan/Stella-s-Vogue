@@ -44,7 +44,6 @@
                     <div class="overflow-x-auto w-full">
                         <Table :items="orders.data">
                             <template #table-header>
-                                <TableHeaderCell label="ID" />
                                 <TableHeaderCell label="Name" class="min-w-[180px]"/>
                                 <TableHeaderCell label="Collection Name" class="min-w-[300px]" />
                                 <TableHeaderCell label="Amount" class="min-w-[300px]" />
@@ -61,7 +60,6 @@
                             </template>
 
                             <template #table-data="{ item }">
-                                <TableDataCell>{{ item.id }}</TableDataCell>
                                 <TableDataCell>{{ item.name }}</TableDataCell>
                                 <TableDataCell>{{ item.collection.name }} ({{ item.color }}/{{ item.size }})</TableDataCell>
                                 <TableDataCell>{{ formatMoney(item.amount) }}MMK</TableDataCell>
