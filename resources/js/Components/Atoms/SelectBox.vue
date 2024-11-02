@@ -76,5 +76,9 @@ export default {
   .vs__selected-options{
     flex-wrap: nowrap;
   }
+
+  input[type="search"] {
+      border: none;
+  }
   </style>
   
