@@ -14,47 +14,6 @@
           />
           <InputError class="mt-2" :message="form.errors?.name" />
         </div>
-
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700"
-            >Collection Name</label
-          >
-          <SelectBox
-            class="w-full bg-white"
-            v-model="form.collection_id"
-            placeholder="Choose collection"
-            :options="collections"
-            :reduce="(collection) => collection.id"
-            :get-option-label="(option) => `${option.name}`"
-          />
-          <InputError class="mt-2" :message="form.errors?.collection_id" />
-        </div>
-
-        <div>
-          <label for="color" class="block text-sm font-medium text-gray-700"
-            >Color</label
-          >
-          <input
-            v-model="form.color"
-            type="text"
-            id="color"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-          <InputError class="mt-2" :message="form.errors?.color" />
-        </div>
-        <div>
-          <label for="size" class="block text-sm font-medium text-gray-700"
-            >Size</label
-          >
-          <input
-            v-model="form.size"
-            type="text"
-            id="size"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-          <InputError class="mt-2" :message="form.errors?.size" />
-        </div>
-
         <div>
           <label for="address" class="block text-sm font-medium text-gray-700"
             >Address</label
@@ -67,7 +26,6 @@
           />
           <InputError class="mt-2" :message="form.errors?.address" />
         </div>
-
         <div>
           <label for="phone" class="block text-sm font-medium text-gray-700"
             >Phone Number</label
@@ -80,7 +38,6 @@
           />
           <InputError class="mt-2" :message="form.errors?.phone" />
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label for="payment" class="block text-sm font-medium text-gray-700"
@@ -128,19 +85,6 @@
           />
           <InputError class="mt-2" :message="form.errors?.screenshot" />
         </div>
-
-        <div>
-          <label for="amount" class="block text-sm font-medium text-gray-700"
-            >Amount</label
-          >
-          <input
-            v-model="form.amount"
-            type="number"
-            id="amount"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-          <InputError class="mt-2" :message="form.errors?.amount" />
-        </div>
         <div>
           <label for="deli_amount" class="block text-sm font-medium text-gray-700"
             >Deli Amount</label
@@ -153,20 +97,96 @@
           />
           <InputError class="mt-2" :message="form.errors?.deli_amount" />
         </div>
+        
       </div>
-      <div>
-          <label for="notes" class="block text-sm font-medium text-gray-700"
-            >Notes</label
+
+      <div class="mt-10">
+        <div class="flex justify-end">
+          <button
+          @click="handleAddCollection"
+          type="button"
+          class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
           >
-          <textarea
-            v-model="form.notes"
-            type="text"
-            rows="5"
-            id="notes"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-          <InputError class="mt-2" :message="form.errors?.notes" />
+          Add Another Collection
+          </button>
         </div>
+        <div class="flex flex-col gap-5">
+          <div v-for="(collection,index) in form.collections "  :key="index">
+            <h1 class="text-lg font-bold  mb-2">Collection {{ index + 1 }}</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+              <label for="name" class="block text-sm font-medium text-gray-700"
+                >Collection Name</label
+              >
+              <SelectBox
+                class="w-full bg-white"
+                v-model="collection.collection_id"
+                placeholder="Choose collection"
+                :options="collections"
+                :reduce="(collection) => collection.id"
+                :get-option-label="(option) => `${option.name}`"
+              />
+              <InputError class="mt-2" :message="form.errors['collections.' + index + '.collection_id']" />
+            </div>
+
+            <div>
+              <label for="color" class="block text-sm font-medium text-gray-700"
+                >Color</label
+              >
+              <input
+                v-model="collection.color"
+                type="text"
+                id="color"
+                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
+              <InputError class="mt-2" :message="form.errors['collections.' + index + '.color']" />
+            </div>
+            <div>
+              <label for="size" class="block text-sm font-medium text-gray-700"
+                >Size</label
+              >
+              <input
+                v-model="collection.size"
+                type="text"
+                id="size"
+                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
+              <InputError class="mt-2" :message="form.errors['collections.' + index + '.size']" />
+            </div>
+
+
+            
+
+
+            <div>
+              <label for="amount" class="block text-sm font-medium text-gray-700"
+                >Amount</label
+              >
+              <input
+                v-model="collection.amount"
+                type="number"
+                id="amount"
+                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
+              <InputError class="mt-2" :message="form.errors['collections.' + index + '.amount']" />
+            </div>
+            <div>
+                <label for="notes" class="block text-sm font-medium text-gray-700"
+                  >Notes</label
+                >
+                <textarea
+                  v-model="collection.notes"
+                  type="text"
+                  rows="5"
+                  id="notes"
+                  class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                />
+                <InputError class="mt-2" :message="form.errors['collections.' + index + '.notes']" />
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="mt-6">
         <button
@@ -193,16 +213,13 @@ export default {
       type: Object,
       default: () => ({
         name: "",
-        color: "",
-        size: "",
         address: "",
         phone: "",
         payment: "",
         screenshot: null,
         delivery_id: null,
-        notes: "",
-        amount: 0,
         deli_amount: 0,
+        collections : []
       }),
     },
     collections: Array,
@@ -215,17 +232,19 @@ export default {
     return {
       form: this.$inertia.form({
         name: this.initialForm.name,
-        color: this.initialForm.color,
-        size: this.initialForm.size,
         address: this.initialForm.address,
         phone: this.initialForm.phone,
         payment: this.initialForm.payment,
         screenshot: this.initialForm.screenshot,
         delivery_id: this.initialForm.delivery_id,
-        notes: this.initialForm.notes,
-        amount: this.initialForm.amount,
         deli_amount: this.initialForm.deli_amount,
-        collection_id: this.initialForm.collection_id,
+        collections : this.isEditMode ? []: [{
+          collection_id : "",
+          color : "",
+          size : '',
+          amount : 0,
+          notes : ''
+        }]
       }),
     };
   },
@@ -242,6 +261,15 @@ export default {
         })
       );
     },
+    handleAddCollection(){
+      this.form.collections.push({
+          collection_id : "",
+          color : "",
+          size : '',
+          amount : 0,
+          notes : ''
+        })
+    }
   },
 };
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderRequest;
 use App\Models\Delivery;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Static\PaymentOption;
 use DateTime;
 use Illuminate\Http\Request;
@@ -73,15 +74,10 @@ class OrderController extends Controller
         $order = new Order();
         // Fill the order data
         $order->name = $request->name;
-        $order->color = $request->color;
-        $order->size = $request->size;
         $order->address = $request->address;
         $order->phone = $request->phone;
         $order->payment = $request->payment;
         $order->delivery_id = $request->delivery_id;
-        $order->notes = $request->notes;
-        $order->collection_id = $request->collection_id;
-        $order->amount = $request->amount;
         $order->deli_amount = $request->deli_amount;
 
         // Handle file upload if a screenshot is provided
@@ -92,6 +88,16 @@ class OrderController extends Controller
 
         // Save the order to the database
         $order->save();
+
+        foreach ($request->validated()['collections'] as $collection) {
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'collection_id' => $collection['collection_id'],
+                'color' => $collection['color'],
+                'size' => $collection['size'],
+                'amount' => $collection['amount']
+            ]);
+        }
 
         // Return a response (could redirect or return JSON)
         return redirect()->route('admin.orders.index')->with('success', 'Order created successfully!');

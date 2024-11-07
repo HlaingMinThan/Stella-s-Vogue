@@ -23,16 +23,27 @@ class OrderRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'collection_id' => 'required|exists:collections,id',
-            'color' => 'required|string|max:50',
-            'size' => 'required|string|max:50',
             'address' => 'required|string|max:255',
             'phone' => 'required|numeric',
             'payment' => 'required|string|max:50',
             'delivery_id' => 'required|integer',
-            'notes' => 'nullable|string|max:600',
-            'amount' => 'required|numeric|min:0',
             'deli_amount' => 'nullable|numeric|min:0',
+            'collections' => 'required|array|min:1',
+            'collections.*.collection_id' => 'required|numeric',
+            'collections.*.color' => 'required|string',
+            'collections.*.size' => 'required|string',
+            'collections.*.amount' => 'required|numeric|min:1',
+            'collections.*.notes' => 'nullable|string|max:255'
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'collections.*.collection_id.required' => 'The collections collection ID field is required.',
+            'collections.*.color.required' => 'The collections color field is required.',
+            'collections.*.size.required' => 'The collections size field is required.',
+            'collections.*.amount.required' => 'The collections amount field is required.',
+            'collections.*.amount.min' => 'The collections amount field should be at least 1.',
         ];
     }
 }
