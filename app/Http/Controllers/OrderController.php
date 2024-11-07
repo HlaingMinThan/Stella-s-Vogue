@@ -146,4 +146,15 @@ class OrderController extends Controller
         $order->delete();
         return back()->with('success', 'Order deleted successfully!');
     }
+
+    public function details(Order $order)
+    {
+        $order->load('delivery');
+        $order->total = $order->orderDetails()->sum('amount');
+
+        return inertia("Admin/Orders/Details", [
+            'order' => $order,
+            'items' => $order->orderDetails()->with('order', 'collection')->paginate(10)
+        ]);
+    }
 }
