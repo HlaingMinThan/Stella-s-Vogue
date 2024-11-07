@@ -25,8 +25,8 @@ class Collection extends Model
         return $this->orders->sum('amount');
     }
 
-    public function orders()
+    public function orderDetails()
     {
-        return $this->hasMany(Order::class, 'collection_id');
+        return $this->hasMany(OrderDetail::class, 'collection_id');
     }
 }

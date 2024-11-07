@@ -30,7 +30,7 @@ class CollectionController extends Controller
                     'taxi_charges' => $collection->taxi_charges,
                     'stock' => $collection->stock,
                     'sum' => $collection->sum, // Access the virtual property
-                    'deletable' => !$collection->orders->count(),
+                    'deletable' => !$collection->orderDetails()->exists(),
                 ]),
         ]);
     }
