@@ -29,27 +29,32 @@ class OrderController extends Controller
         $collection = \App\Models\Collection::find(request('collection_id'));
         return inertia("Admin/Orders/Index", [
             'collections' => \App\Models\Collection::latest()->get(),
-            'orders' => \App\Models\Order::with('collection', 'delivery')
+            'orders' => \App\Models\Order::with('collection', 'delivery', 'orderDetails') // Eager load orderDetails
                 ->when(request('collection_id'), function ($q) {
                     return $q->where('collection_id', request('collection_id'));
                 })
                 ->where(function ($q) {
-                    $q
-                        ->where('name', 'like', '%' . request('search') . '%')
+                    $q->where('name', 'like', '%' . request('search') . '%')
                         ->orWhere('phone', 'like', '%' . request('search') . '%')
                         ->orWhere('address', 'like', '%' . request('search') . '%')
-                        ->orWhere('color', 'like', '%' . request('search') . '%');
+                        // Join with order_details table for color filtering
+                        ->orWhereHas('orderDetails', function ($query) {
+                            $query->where('color', 'like', '%' . request('search') . '%');
+                        });
                 })
                 ->when($formattedDate, function ($q) use ($formattedDate) {
                     return $q->whereDate('created_at', $formattedDate);
                 })
-                ->latest()->paginate(10)->through(fn($order) => [
+                ->latest()
+                ->paginate(10)
+                ->through(fn($order) => [
                     ...$order->toArray(),
-                    'editable' => auth()->user()->isAdmin()
+                    'amount' => $order->orderDetails->sum('amount'),
+                    'editable' => auth()->user()->isAdmin(),
                 ]),
             'old_selected_collection' => $collection?->id,
             'collection' => $collection,
-            'date' => $formattedDate
+            'date' => $formattedDate,
         ]);
     }
 

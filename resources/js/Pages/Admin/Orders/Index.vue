@@ -45,7 +45,6 @@
                         <Table :items="orders.data">
                             <template #table-header>
                                 <TableHeaderCell label="Name" class="min-w-[180px]"/>
-                                <TableHeaderCell label="Collection Name" class="min-w-[300px]" />
                                 <TableHeaderCell label="Amount" class="min-w-[300px]" />
                                 <TableHeaderCell label="Deli Amount" class="min-w-[300px]" />
                                 <TableHeaderCell label="Phone" class="min-w-[150px]" />
@@ -61,7 +60,6 @@
 
                             <template #table-data="{ item }">
                                 <TableDataCell>{{ item.name }}</TableDataCell>
-                                <TableDataCell>{{ item.collection.name }} ({{ item.color }}/{{ item.size }})</TableDataCell>
                                 <TableDataCell>{{ formatMoney(item.amount) }}MMK</TableDataCell>
                                 <TableDataCell>{{ item.deli_amount? formatMoney(item.deli_amount) : 0 }}MMK</TableDataCell>
                                 <TableDataCell>{{ item.phone }}</TableDataCell>

@@ -22,7 +22,7 @@ class Collection extends Model
 
     public function getOrderTotalAttribute()
     {
-        return $this->orders->sum('amount');
+        return $this->orderDetails->sum('amount');
     }
 
     public function orderDetails()
