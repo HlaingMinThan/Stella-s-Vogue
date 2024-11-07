@@ -14,11 +14,6 @@
                 </InertiaLinkButton>
             </div>
         </div>
-        <template v-if="collection">
-            <h1  class="text-center text-2xl font-semibold my-3 text-primary"> {{ collection.name.toUpperCase() }} Collection Orders</h1>
-            <h2  class="text-center text-lg font-semibold my-3">Budget - {{ formatMoney(collection.sum) }} MMK</h2>
-            <h2  class="text-center text-lg font-semibold my-3">Collection total Order - {{ formatMoney(collection.order_total) }} MMK</h2>
-        </template>
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
             <h1 v-if="date" class="text-center text-2xl font-semibold my-3">Orders for {{ date }}</h1>
@@ -73,6 +68,13 @@
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.notes }}</p></TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.created_at }}</p></TableDataCell>
                                 <TableActionCell v-if="item.editable">
+                                    <InertiaLinkButton
+                                        :href="route('admin.orders.details.index', { order: item?.id })"
+                                        class="bg-yellow-600 hover:bg-yellow-700 text-white !text-xs !font-semibold"
+                                    >
+                                        <i class="fa-solid fa-edit"></i>
+                                        View
+                                    </InertiaLinkButton>
                                     <InertiaLinkButton
                                         :href="route('admin.orders.edit', { order: item?.id })"
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
