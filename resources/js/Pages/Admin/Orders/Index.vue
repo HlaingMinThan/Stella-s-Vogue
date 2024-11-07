@@ -28,11 +28,20 @@
                         :get-option-label="(option) => `${option.name}`"
                     />
                 </div>
-                <DashboardTableDataSearchBox
-                    placeholder="Search by customer name,phone,address and color"
-                    :href="route('admin.orders.index')"
-                />
-            </div>
+                <div class="flex items-center gap-3">
+                    <input
+                        type="date"
+                        id="order_date"
+                        :value="date"
+                        @change="handleDateChange"
+                        class="mt-1 block  py-4 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    />
+                            <DashboardTableDataSearchBox
+                                placeholder="Search by customer name,phone,address and color"
+                                :href="route('admin.orders.index')"
+                            />
+                </div>
+        </div>
 
             <TableContainer :data-count="orders?.data?.length" :paginate-links="orders.links">
                 <template #table>
@@ -125,6 +134,7 @@ import NormalButton from '@/Components/Atoms/NormalButton.vue';
 import formatMoney from '@/Helpers/formatMoney';
 import SelectBox from '@/Components/Atoms/SelectBox.vue';
 import { emitter } from '@/Helpers/emitter';
+import { router, usePage } from '@inertiajs/vue3';
 
 export default {
     components: {
@@ -160,12 +170,22 @@ export default {
             this.handleCollectionChange(this.selected_collection);
         }
     },
+    computed:{
+        date(){
+            return usePage().props.ziggy?.query?.date;
+        }
+    },
     methods: {
         formatMoney,
         handleCollectionChange(id) {
             this.$inertia.get(route('admin.orders.index', { collection_id: id }),{},{
                 preserveState: true,
             });
+        },
+        handleDateChange(e){
+            console.log(e)
+            let search =usePage().props.ziggy.query?.search
+            router.get(route('admin.orders.index',{search,date : e.target.value }))
         },
         async destroy(model, url, confirmationOptions = null){
             emitter.emit('open-confirmation-dialog', {

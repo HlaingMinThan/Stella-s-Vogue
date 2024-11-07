@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="text-xl font-bold">Edit Order</h1>
-        <OrderForm :initialForm="order" :isEditMode="true" :collections="collections" :payments="payments" :deliveries="deliveries"/>
+        <OrderForm  :initialForm="order" :isEditMode="true" :collections="collections" :payments="payments" :deliveries="deliveries"/>
     </div>
 </template>
   

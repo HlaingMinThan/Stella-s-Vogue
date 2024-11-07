@@ -27,10 +27,12 @@ class OrderRequest extends FormRequest
             'phone' => 'required|numeric',
             'payment' => 'required|string|max:50',
             'delivery_id' => 'required|integer',
+            'created_at' => 'nullable',
             'deli_amount' => 'nullable|numeric|min:0',
             'collections' => 'required|array|min:1',
             'collections.*.collection_id' => 'required|numeric',
             'collections.*.color' => 'required|string',
+            'collections.*.id' => 'nullable|numeric',
             'collections.*.size' => 'required|string',
             'collections.*.amount' => 'required|numeric|min:1',
             'collections.*.notes' => 'nullable|string|max:255'

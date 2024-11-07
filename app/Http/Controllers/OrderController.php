@@ -18,15 +18,6 @@ class OrderController extends Controller
             'collection_id' => 'nullable|exists:collections,id',
         ]);
 
-        $dateInput = request('date');
-        $formattedDate = null;
-
-        if ($dateInput) {
-            $date = DateTime::createFromFormat('d-m-y', $dateInput);
-            if ($date) {
-                $formattedDate = $date->format('Y-m-d');
-            }
-        }
         $collection = \App\Models\Collection::find(request('collection_id'));
         return inertia("Admin/Orders/Index", [
             'collections' => \App\Models\Collection::latest()->get(),
@@ -43,8 +34,8 @@ class OrderController extends Controller
                             $query->where('color', 'like', '%' . request('search') . '%');
                         });
                 })
-                ->when($formattedDate, function ($q) use ($formattedDate) {
-                    return $q->whereDate('created_at', $formattedDate);
+                ->when(request('date'), function ($q) {
+                    return $q->whereDate('created_at', request('date'));
                 })
                 ->latest()
                 ->paginate(10)
@@ -55,7 +46,6 @@ class OrderController extends Controller
                 ]),
             'old_selected_collection' => $collection?->id,
             'collection' => $collection,
-            'date' => $formattedDate,
         ]);
     }
 
@@ -79,6 +69,9 @@ class OrderController extends Controller
         $order->payment = $request->payment;
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
+        if ($request->created_at) {
+            $order->created_at = $request->created_at;
+        }
 
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
@@ -105,10 +98,11 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
+        $orderDetails = Order::where('id', $order->id)->with('orderDetails')->first();
         return inertia("Admin/Orders/Edit", [
             'collections' => \App\Models\Collection::latest()->get(),
             'payments' => PaymentOption::all(),
-            'order' => $order,
+            'order' => $orderDetails,
             'deliveries' => Delivery::all(),
         ]);
     }
@@ -117,17 +111,14 @@ class OrderController extends Controller
     {
         // Fill the order data
         $order->name = $request->name;
-        $order->color = $request->color;
-        $order->size = $request->size;
         $order->address = $request->address;
         $order->phone = $request->phone;
         $order->payment = $request->payment;
         $order->delivery_id = $request->delivery_id;
-        $order->notes = $request->notes;
-        $order->collection_id = $request->collection_id;
-        $order->amount = $request->amount;
         $order->deli_amount = $request->deli_amount;
-
+        if ($request->created_at) {
+            $order->created_at = $request->created_at;
+        }
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
             $filePath = $request->file('screenshot')->store('screenshots', 'public'); // Store in 'public/screenshots'
@@ -136,6 +127,27 @@ class OrderController extends Controller
 
         // Save the order to the database
         $order->save();
+
+        foreach ($request->validated()['collections'] as $collection) {
+            if ($collection['id'] ?? null) {
+                $orderDetail = OrderDetail::where('id', $collection['id'])->first();
+                $orderDetail->update([
+                    'order_id' => $order->id,
+                    'collection_id' => $collection['collection_id'],
+                    'color' => $collection['color'],
+                    'size' => $collection['size'],
+                    'amount' => $collection['amount']
+                ]);
+            } else {
+                OrderDetail::create([
+                    'order_id' => $order->id,
+                    'collection_id' => $collection['collection_id'],
+                    'color' => $collection['color'],
+                    'size' => $collection['size'],
+                    'amount' => $collection['amount']
+                ]);
+            }
+        }
 
         // Return a response (could redirect or return JSON)
         return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully!');
