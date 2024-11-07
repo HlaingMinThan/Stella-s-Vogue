@@ -13,17 +13,17 @@ class ReportController extends Controller
 {
     public function index()
     {
-        // Get the month and payment filters from the request
-        $month =  request('month'); // request('month');  // Expected format: 'YYYY-MM'
-        $payment = request('payment'); //request('payment');  // Payment method filter (e.g., 'kpay', 'wave')
-        $delivery = request('delivery_id'); //royal
+        $month =  request('month'); // Expected format: 'YYYY-MM'
+        $payment = request('payment'); // Payment method filter (e.g., 'kpay', 'wave')
+        $delivery = request('delivery_id'); // Royal
 
         $reports = Order::select(
             DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y') as date"),  // Format date to DD-MM-YY
-            DB::raw('SUM(orders.amount) as total_order_amount'),  // Specify the table for amount
-            DB::raw('COUNT(orders.id) as total_ways')  // Count the total number of orders (not distinct deliveries)
+            DB::raw('SUM(order_details.amount) as total_order_amount'),  // Sum the amount from order_details
+            DB::raw('COUNT(orders.id) as total_ways')  // Count the total number of orders
         )
             ->join('deliveries', 'orders.delivery_id', '=', 'deliveries.id')  // Join deliveries table
+            ->join('order_details', 'orders.id', '=', 'order_details.order_id')  // Join order_details table
             // Apply the month filter if present
             ->when($month, function ($query, $month) {
                 return $query->whereRaw("DATE_FORMAT(orders.created_at, '%Y-%m') = ?", [$month]);
@@ -49,7 +49,9 @@ class ReportController extends Controller
                 'payment' => $payment
             ],
             "stats" => [
-                "total_today_order_income" => Order::whereDate('created_at', Carbon::today())->sum('amount') . " MMK",
+                "total_today_order_income" => Order::join('order_details', 'orders.id', '=', 'order_details.order_id')
+                    ->whereDate('orders.created_at', Carbon::today())
+                    ->sum('order_details.amount') . " MMK",
                 "total_today_ways" => Order::whereDate('created_at', Carbon::today())->count(),
             ],
             'selected' => [
