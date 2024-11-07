@@ -18,6 +18,11 @@ class Order extends Model
         return $this->belongsTo(Collection::class, 'collection_id');
     }
 
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id');
+    }
+
     public function getScreenshotAttribute($value)
     {
         if ($value) {
