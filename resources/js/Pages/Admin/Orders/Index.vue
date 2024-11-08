@@ -17,7 +17,7 @@
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
             <h1 v-if="date" class="text-center text-2xl font-semibold my-3">Orders for {{ date }}</h1>
-            <div class="my-3 flex flex-col md:flex-row space-y-5 sm:space-y-0 items-center justify-between" v-if="!date">
+            <div class="my-3 flex flex-col xl:flex-row space-y-5 sm:space-y-0 xl:items-center justify-between" v-if="!date">
                 <div class="relative">
                     <SelectBox
                         class="w-[380px]"
@@ -28,13 +28,13 @@
                         :get-option-label="(option) => `${option.name}`"
                     />
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center xl:flex-nowrap flex-wrap  gap-3">
                     <input
                         type="date"
                         id="order_date"
                         :value="date"
                         @change="handleDateChange"
-                        class="mt-1 block  py-4 shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 block md:w-min w-full  py-4 shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                             <DashboardTableDataSearchBox
                                 placeholder="Search by customer name,phone,address and color"
