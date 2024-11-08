@@ -55,7 +55,9 @@ class OrderController extends Controller
                 ->through(fn($order) => [
                     ...$order->toArray(),
                     'amount' => $order->orderDetails->sum('amount'),
-                    'editable' => auth()->user()->isAdmin(),
+                    'editable' => true,
+                    'deletable' => auth()->user()->isAdmin() && !$order->orderDetails->count(),
+                    'viewable' => true
                 ]),
             'old_selected_collection' => $collection?->id,
             'collection' => $collection,
@@ -101,7 +103,8 @@ class OrderController extends Controller
                 'collection_id' => $collection['collection_id'],
                 'color' => $collection['color'],
                 'size' => $collection['size'],
-                'amount' => $collection['amount']
+                'amount' => $collection['amount'],
+                'notes' => $collection['notes']
             ]);
         }
 
@@ -130,7 +133,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');;
+            $order->created_at =  DateTime::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');
         }
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
@@ -149,6 +152,7 @@ class OrderController extends Controller
                     'collection_id' => $collection['collection_id'],
                     'color' => $collection['color'],
                     'size' => $collection['size'],
+                    'notes' => $collection['notes'],
                     'amount' => $collection['amount']
                 ]);
             } else {
@@ -156,6 +160,7 @@ class OrderController extends Controller
                     'order_id' => $order->id,
                     'collection_id' => $collection['collection_id'],
                     'color' => $collection['color'],
+                    'notes' => $collection['notes'],
                     'size' => $collection['size'],
                     'amount' => $collection['amount']
                 ]);
@@ -171,6 +176,12 @@ class OrderController extends Controller
         OrderDetail::where('order_id', $order->id)->delete();
         $order->delete();
         return back()->with('success', 'Order deleted successfully!');
+    }
+
+    public function orderDetailDelete(OrderDetail $orderDetail)
+    {
+        $orderDetail->delete();
+        return back();
     }
 
     public function details(Order $order)

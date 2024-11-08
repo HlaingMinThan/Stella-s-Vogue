@@ -102,7 +102,8 @@
             >Order Date</label
           >
           <input
-            v-model="form.created_at"
+            :value="createdAtDate"
+            @change="handleDateChange"
             type="date"
             id="order_date"
             class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -245,6 +246,15 @@ export default {
       default: false,
     },
   },
+  computed:{
+    createdAtDate(){
+      if(this.form?.created_at){
+        const [day, month, year] = this.form.created_at?.split('-');
+        return  `20${year}-${month}-${day}`;
+      }
+      return null;
+    }
+  },
   data() {
     return {
       form: this.$inertia.form({
@@ -297,9 +307,20 @@ export default {
           notes : ''
         })
     },
+    handleDateChange(e){
+            const formattedDate = new Date(e.target.value).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: '2-digit'
+                                }).replace(/\//g, '-'); 
+            this.form.created_at = formattedDate
+        },
     handleDeleteOrderItem(i){
       this.form.collections.splice(i,1)
     }
+  },
+  mounted(){
+    console.log(this.form.created_at)
   }
 };
 </script>

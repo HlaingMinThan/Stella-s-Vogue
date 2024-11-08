@@ -57,7 +57,6 @@
                                 <!-- preview -->
                                 <TableHeaderCell label="screenshot" class="min-w-[150px]" />
                                 <TableHeaderCell label="Delivery" class="min-w-[150px]" />
-                                <TableHeaderCell label="notes" class="min-w-[150px]" />
                                 <TableHeaderCell label="Date" class="min-w-[150px]" />
                                 <TableHeaderCell label="Actions"  />
                             </template>
@@ -74,9 +73,8 @@
                                     <p v-else>-</p>
                                 </TableDataCell>
                                 <TableDataCell>{{ item.delivery.name }}</TableDataCell>
-                                <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.notes }}</p></TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.created_at }}</p></TableDataCell>
-                                <TableActionCell v-if="item.editable">
+                                <TableActionCell v-if="item.viewable">
                                     <InertiaLinkButton
                                         :href="route('admin.orders.details.index', { order: item?.id })"
                                         class="bg-yellow-600 hover:bg-yellow-700 text-white !text-xs !font-semibold"
@@ -85,6 +83,7 @@
                                         View
                                     </InertiaLinkButton>
                                     <InertiaLinkButton
+                                    v-if="item.editable"
                                         :href="route('admin.orders.edit', { order: item?.id })"
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
                                     >
@@ -92,7 +91,7 @@
                                         Edit
                                     </InertiaLinkButton>
                                     <NormalButton
-                                        v-if="!item?.deleted_at"
+                                        v-if="item?.deletable"
                                         type="button"
                                         @click="
                                             destroy(

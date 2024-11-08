@@ -42,10 +42,11 @@ Route::middleware(MustBeAuthUser::class)
         // orders
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index')->middleware([MustBeStaffUser::class]);
         Route::get('orders/{order}/order-details', [OrderController::class, 'details'])->name('orders.details.index')->middleware([MustBeStaffUser::class]);
+        Route::delete('orderdetails/{orderDetail}/delete', [OrderController::class, 'orderDetailDelete'])->name('orderdetail.destroy')->middleware([MustBeStaffUser::class]);
         Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create')->middleware(MustBeStaffUser::class);
         Route::post('orders/store', [OrderController::class, 'store'])->name('orders.store')->middleware(MustBeStaffUser::class);
-        Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware(MustBeAdminMiddleware::class);
-        Route::post('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware(MustBeAdminMiddleware::class);
+        Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware([MustBeStaffUser::class]);
+        Route::post('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware([MustBeStaffUser::class]);
         Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
 
 

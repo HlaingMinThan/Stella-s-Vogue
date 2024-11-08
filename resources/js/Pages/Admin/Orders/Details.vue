@@ -139,6 +139,10 @@
                                     label="Amount"
                                     class="min-w-[150px]"
                                 />
+                                <TableHeaderCell
+                                    label="Notes"
+                                    class="min-w-[150px]"
+                                />
                                 <TableHeaderCell label="Actions" />
                             </template>
 
@@ -153,26 +157,15 @@
                                         formatMoney(item.amount)
                                     }}MMK</TableDataCell
                                 >
-                                <TableActionCell v-if="item.editable">
-                                    <InertiaLinkButton
-                                        :href="
-                                            route('admin.orders.edit', {
-                                                order: item?.id,
-                                            })
-                                        "
-                                        class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
-                                    >
-                                        <i class="fa-solid fa-edit"></i>
-                                        Edit
-                                    </InertiaLinkButton>
+                                <TableActionCell class="min-w-[250px]">{{ item?.notes }}</TableActionCell>
+                                <TableActionCell >
                                     <NormalButton
-                                        v-if="!item?.deleted_at"
                                         type="button"
                                         @click="
                                             destroy(
-                                                'Membership',
-                                                route('admin.orders.destroy', {
-                                                    order: item?.id,
+                                                'OrderDetail',
+                                                route('admin.orderdetail.destroy', {
+                                                    orderDetail: item?.id,
                                                 })
                                             )
                                         "
