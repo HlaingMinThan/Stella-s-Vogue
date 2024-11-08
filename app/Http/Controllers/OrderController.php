@@ -83,7 +83,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at =  \Carbon\Carbon::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');;
+            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');;
         }
 
         // Handle file upload if a screenshot is provided
@@ -130,7 +130,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at =  \Carbon\Carbon::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');;
+            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');;
         }
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
@@ -168,6 +168,7 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
+        OrderDetail::where('order_id', $order->id)->delete();
         $order->delete();
         return back()->with('success', 'Order deleted successfully!');
     }
