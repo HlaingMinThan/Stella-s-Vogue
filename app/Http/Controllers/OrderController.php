@@ -83,7 +83,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at =  \Carbon\Carbon::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');;
+            $order->created_at =  \Carbon\Carbon::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');
         }
 
         // Handle file upload if a screenshot is provided
