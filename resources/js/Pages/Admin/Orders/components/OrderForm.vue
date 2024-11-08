@@ -130,7 +130,7 @@
               <button @click="() => handleDeleteOrderItem(index)" class="bg-red-500 text-white text-sm py-1 rounded-lg px-2" v-if="!isEditMode">Delete</button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
+            <div>
               <label for="name" class="block text-sm font-medium text-gray-700"
                 >Collection Name</label
               >

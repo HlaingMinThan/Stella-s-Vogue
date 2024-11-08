@@ -185,7 +185,12 @@ export default {
         handleDateChange(e){
             console.log(e)
             let search =usePage().props.ziggy.query?.search
-            router.get(route('admin.orders.index',{search,date : e.target.value }))
+            const formattedDate = new Date(e.target.value).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: '2-digit'
+                                }).replace(/\//g, '-'); 
+            router.get(route('admin.orders.index',{search,date : formattedDate }))
         },
         async destroy(model, url, confirmationOptions = null){
             emitter.emit('open-confirmation-dialog', {

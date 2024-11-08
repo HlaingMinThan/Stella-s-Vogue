@@ -7,6 +7,7 @@ use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Static\PaymentOption;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,18 @@ class OrderController extends Controller
         request()->validate([
             'collection_id' => 'nullable|exists:collections,id',
         ]);
+
+        $dateInput = request('date');
+        $formattedDate = null;
+        // dd($dateInput);
+        if ($dateInput) {
+            $date = DateTime::createFromFormat('d-m-y', $dateInput);
+            if ($date) {
+                $formattedDate = $date->format('Y-m-d');
+            }
+        }
+
+
 
         $collection = \App\Models\Collection::find(request('collection_id'));
         return inertia("Admin/Orders/Index", [
@@ -34,8 +47,8 @@ class OrderController extends Controller
                             $query->where('color', 'like', '%' . request('search') . '%');
                         });
                 })
-                ->when(request('date'), function ($q) {
-                    return $q->whereDate('created_at', request('date'));
+                ->when($formattedDate, function ($q) use ($formattedDate) {
+                    return $q->whereDate('created_at', $formattedDate);
                 })
                 ->latest()
                 ->paginate(10)
@@ -70,7 +83,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at = $request->created_at;
+            $order->created_at =  \Carbon\Carbon::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');;
         }
 
         // Handle file upload if a screenshot is provided
@@ -117,7 +130,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at = $request->created_at;
+            $order->created_at =  \Carbon\Carbon::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');;
         }
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {

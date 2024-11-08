@@ -20,7 +20,7 @@ class ReportController extends Controller
         $reports = Order::select(
             DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y') as date"),  // Format date to DD-MM-YY
             DB::raw('SUM(order_details.amount) as total_order_amount'),  // Sum the amount from order_details
-            DB::raw('COUNT(orders.id) as total_ways')  // Count the total number of orders
+            DB::raw('COUNT(DISTINCT orders.id) as total_ways')  // Count the total number of orders
         )
             ->join('deliveries', 'orders.delivery_id', '=', 'deliveries.id')  // Join deliveries table
             ->join('order_details', 'orders.id', '=', 'order_details.order_id')  // Join order_details table
@@ -39,6 +39,7 @@ class ReportController extends Controller
             ->groupBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"))  // Group by formatted date
             ->orderBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"), 'DESC')  // Order by formatted date
             ->paginate(10);
+
 
         return inertia('Admin/Dashboard', [
             'reports' => $reports,
