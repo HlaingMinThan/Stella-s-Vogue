@@ -221,7 +221,7 @@
         </div>
         <div
             v-if="items.links?.length && items.data.length > 0"
-            class="flex items-center justify-center py-5"
+            class="flex md:hidden items-center justify-center py-5"
         >
             <Pagination :links="items?.links" />
         </div>

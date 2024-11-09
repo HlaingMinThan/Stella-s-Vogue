@@ -1,3 +1,7 @@
+<script setup>
+    import {format} from 'date-fns'
+</script>
+
 <template>
     <div class="min-h-screen py-3 space-y-8">
         <div class="grid grid-cols-1 md:grid-cols-2" v-if="!date && !selected_collection">
@@ -67,7 +71,7 @@
                                     <p v-else>-</p>
                                 </TableDataCell>
                                 <TableDataCell>{{ item.delivery.name }}</TableDataCell>
-                                <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ item.created_at }}</p></TableDataCell>
+                                <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ format(new Date(item.created_at),'dd-MM-yy') }}</p></TableDataCell>
                                 <TableActionCell v-if="item.viewable">
                                     <InertiaLinkButton
                                         :href="route('admin.orders.details.index', { order: item?.id })"
@@ -132,6 +136,11 @@
                     </p>
                 </div>
                 <div>
+                    <h1 class="font-semibold">Order Date</h1>
+                    <p>{{ format(new Date(order.created_at),"dd-MM-yy") }}
+                    </p>
+                </div>
+                <div>
                     <h1 class="font-semibold">ScreenShot</h1>
                     <img v-if="order.screenshot" :src="order.screenshot" class="w-12 h-12" @click="screenshot = order.screenshot;open=true">
                 </div>
@@ -178,7 +187,7 @@
         </div>
         <div
             v-if="orders.links?.length && orders.data.length > 0"
-            class="flex items-center justify-center py-5"
+            class="flex md:hidden  items-center justify-center py-5"
         >
             <Pagination :links="orders?.links" />
         </div>

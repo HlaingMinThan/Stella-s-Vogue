@@ -101,17 +101,11 @@
           <label for="deli_amount" class="block text-sm font-medium text-gray-700"
             >Order Date</label
           >
-          <input
-            :value="createdAtDate"
-            @change="handleDateChange"
-            type="date"
-            id="order_date"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
+          <Datepicker v-model="form.created_at" name="created_at" />
           <InputError class="mt-2" :message="form.errors?.created_at" />
         </div>
 
-        
+
       </div>
 
       <div class="mt-10">
@@ -172,7 +166,7 @@
             </div>
 
 
-            
+
 
 
             <div>
@@ -220,9 +214,11 @@
 <script>
 import SelectBox from "@/Components/Atoms/SelectBox.vue";
 import InputError from "@/Components/InputError.vue";
+import Datepicker from "@/Components/Atoms/Datepicker.vue";
+import {format} from 'date-fns'
 
 export default {
-  components: { SelectBox ,InputError },
+  components: {Datepicker, SelectBox ,InputError },
   props: {
     deliveries: Array,
     payments: Array,
@@ -245,15 +241,6 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  computed:{
-    createdAtDate(){
-      if(this.form?.created_at){
-        const [day, month, year] = this.form.created_at?.split('-');
-        return  `20${year}-${month}-${day}`;
-      }
-      return null;
-    }
   },
   data() {
     return {
@@ -312,7 +299,7 @@ export default {
                                     day: '2-digit',
                                     month: '2-digit',
                                     year: '2-digit'
-                                }).replace(/\//g, '-'); 
+                                }).replace(/\//g, '-');
             this.form.created_at = formattedDate
         },
     handleDeleteOrderItem(i){
@@ -320,7 +307,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.form.created_at)
+    console.log(this.initialForm.created_at)
   }
 };
 </script>

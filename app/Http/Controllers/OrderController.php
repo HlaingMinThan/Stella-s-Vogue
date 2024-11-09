@@ -85,7 +85,7 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');;
+            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');
         }
 
         // Handle file upload if a screenshot is provided
@@ -133,7 +133,12 @@ class OrderController extends Controller
         $order->delivery_id = $request->delivery_id;
         $order->deli_amount = $request->deli_amount;
         if ($request->created_at) {
-            $order->created_at =  DateTime::createFromFormat('d-m-y', $request->created_at)->format('Y-m-d H:i:s');
+            $requestDate = Carbon::parse($request->created_at)->format('Y-m-d');
+
+            $orderCreatedAt = Carbon::parse($order->created_at)->format('Y-m-d');
+            if($requestDate != $orderCreatedAt){
+            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');
+            }
         }
         // Handle file upload if a screenshot is provided
         if ($request->hasFile('screenshot')) {
