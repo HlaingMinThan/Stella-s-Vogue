@@ -23,7 +23,7 @@
         </div>
 
         <div
-            class=" bg-gray-100 flex items-center justify-center p-6"
+            class=" bg-gray-100 flex items-center justify-center md:p-6"
         >
             <div class=" w-full bg-white shadow-lg rounded-lg p-6">
                 <!-- Order Title -->
@@ -36,8 +36,7 @@
                     <!-- Customer Name -->
                     <div class="text-lg">
                         <strong class="block text-gray-700"
-                            >Customer Name:</strong
-                        >
+                            >Customer Name:</strong>
                         <span class="block text-gray-900">{{order.name}}</span>
                     </div>
 
@@ -113,7 +112,7 @@
         </h2>
         <!-- Table Start -->
         <div
-            class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3"
+            class="relative border md:block hidden border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3"
         >
             <TableContainer
                 :data-count="items?.data?.length"
@@ -181,6 +180,51 @@
                 </template>
             </TableContainer>
         </div>
+        <div class="flex md:hidden flex-col gap-3">
+            <div :key="item.id" v-for="item in items?.data" class="w-full flex flex-col gap-2 bg-white border-[1px] py-4 px-2 rounded-lg shadow-sm shadow-gray-200">
+                <div class="">
+                    <h1 class="font-semibold">Name</h1>
+                    <p>{{ item.collection.name }} (size : {{item.size}}, color : {{item.color}})</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Amount</h1>
+                    <p>{{
+                            formatMoney(item.amount)
+                        }}MMK
+                    </p>
+                </div>
+                <div class="">
+                    <h1 class="font-semibold">Notes</h1>
+                    <p>{{ item.notes }}</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Actions</h1>
+                    <div class="flex gap-2 mt-2">
+                        <NormalButton
+                            type="button"
+                            @click="
+                                            destroy(
+                                                'OrderDetail',
+                                                route('admin.orderdetail.destroy', {
+                                                    orderDetail: item?.id,
+                                                })
+                                            )
+                                        "
+                            class="bg-red-600 hover:bg-red-700 text-white !text-xs !font-semibold"
+                        >
+                            <i class="fa-solid fa-ban"></i>
+                            Delete
+                        </NormalButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            v-if="items.links?.length && items.data.length > 0"
+            class="flex items-center justify-center py-5"
+        >
+            <Pagination :links="items?.links" />
+        </div>
         <!-- Table End -->
     </div>
 </template>
@@ -200,9 +244,12 @@ import NormalButton from "@/Components/Atoms/NormalButton.vue";
 import formatMoney from "@/Helpers/formatMoney";
 import SelectBox from "@/Components/Atoms/SelectBox.vue";
 import { emitter } from "@/Helpers/emitter";
+import Pagination from '@/Components/Common/Pagination.vue';
+
 
 export default {
     components: {
+        Pagination,
         Breadcrumb,
         BreadcrumbItem,
         SelectBox,

@@ -79,6 +79,7 @@
             </div>
 
             <TableContainer
+            class="md:block hidden"
                 :data-count="reports?.data?.length"
                 :paginate-links="reports.links"
             >
@@ -131,6 +132,46 @@
                     </div>
                 </template>
             </TableContainer>
+            <div class="flex md:hidden flex-col gap-3">
+            <div :ke="report.id" v-for="report in reports?.data" class="w-full flex flex-col gap-4 bg-white border-[1px] py-4 px-2 rounded-lg shadow-sm shadow-gray-200">
+                <div class="">
+                    <h1 class="font-semibold">Date</h1>
+                    <p class=" font-semibold">{{ report.date }}</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Total Ways</h1>
+                    <p class="text-lg font-semibold">{{report.total_ways}}</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Total Amount</h1>
+                    <p class="text-lg font-semibold">{{
+                                        formatMoney(report.total_order_amount)
+                                    }} MMK</p>
+                </div>
+                <div>
+                    <div class="flex gap-2 mt-2">
+                        <InertiaLinkButton
+                                        :href="
+                                            route('admin.orders.index', {
+                                                date: report.date,
+                                            })
+                                        "
+                                    >
+                                        <i
+                                            class="fa-solid fa-file-circle-plus mr-1"
+                                        ></i>
+                                        view orders
+                                    </InertiaLinkButton>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div
+                v-if="reports.links?.length && reports.data.length > 0"
+                class="flex md:hidden  items-center justify-center py-5"
+            >
+                <Pagination :links="reports?.links" />
+            </div>
         </div>
         <!-- Table End -->
     </div>

@@ -15,12 +15,12 @@
             </div>
         </div>
         <!-- Table Start -->
-        <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
+        <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 md:px-5 py-3">
             <h1 v-if="date" class="text-center text-2xl font-semibold my-3">Orders for {{ date }}</h1>
             <div class="my-3 flex flex-col xl:flex-row space-y-5 sm:space-y-0 xl:items-center justify-between" v-if="!date">
                 <div class="relative">
                     <SelectBox
-                        class="w-[380px]"
+                        class="md:w-[380px]"
                         v-model="selected_collection"
                         placeholder="Choose collection"
                         :options="collections"
@@ -29,13 +29,7 @@
                     />
                 </div>
                 <div class="flex items-center xl:flex-nowrap flex-wrap  gap-3">
-                    <input
-                        type="date"
-                        id="order_date"
-                        :value="date"
-                        @change="handleDateChange"
-                        class="mt-1 block md:w-min w-full  py-4 shadow-sm sm:text-sm border-gray-300 rounded-md"
-                    />
+                   <Datepicker v-model="filterDate" />
                             <DashboardTableDataSearchBox
                                 placeholder="Search by customer name,phone,address and color"
                                 :href="route('admin.orders.index')"
@@ -43,7 +37,7 @@
                 </div>
         </div>
 
-            <TableContainer :data-count="orders?.data?.length" :paginate-links="orders.links">
+            <TableContainer class="md:block hidden" :data-count="orders?.data?.length" :paginate-links="orders.links">
                 <template #table>
                     <div class="overflow-x-auto w-full">
                         <Table :items="orders.data">
@@ -114,6 +108,80 @@
                 </template>
             </TableContainer>
         </div>
+        <div class="flex md:hidden flex-col gap-3">
+            <div :key="order.id" v-for="order in orders?.data" class="w-full flex flex-col gap-2 bg-white border-[1px] py-4 px-2 rounded-lg shadow-sm shadow-gray-200">
+                <div class="">
+                    <h1 class="font-semibold">Name</h1>
+                    <p>{{ order.name }}</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Amount</h1>
+                    <p class="text-lg font-semibold">{{order?.amount}} MMK</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Deli Amount</h1>
+                    <p class="text-lg font-semibold">{{order.deli_amount}} MMK</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Phone</h1>
+                    <p >{{order.phone}}</p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Address</h1>
+                    <p>{{ order.address }}
+                    </p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">ScreenShot</h1>
+                    <img v-if="order.screenshot" :src="order.screenshot" class="w-12 h-12" @click="screenshot = order.screenshot;open=true">
+                </div>
+                <div>
+                    <h1 class="font-semibold">Delivery</h1>
+                    <p>{{order?.delivery.name}}
+                    </p>
+                </div>
+                <div>
+                    <h1 class="font-semibold">Actions</h1>
+                    <div class="flex gap-2 mt-2">
+                        <InertiaLinkButton
+                                        :href="route('admin.orders.details.index', { order: order?.id })"
+                                        class="bg-yellow-600 hover:bg-yellow-700  text-white !text-xs !font-semibold"
+                                    >
+                                        <i class="fa-solid fa-edit"></i>
+                                        View
+                        </InertiaLinkButton>
+                        <InertiaLinkButton
+                        v-if="order.editable"
+                            :href="route('admin.orders.edit', { order: order?.id })"
+                            class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
+                        >
+                            <i class="fa-solid fa-edit"></i>
+                            Edit
+                        </InertiaLinkButton>
+                        <NormalButton
+                            v-if="order?.deletable"
+                            type="button"
+                            @click="
+                                destroy(
+                                    'Membership',
+                                    route('admin.orders.destroy', { order: order?.id })
+                                )
+                            "
+                            class="bg-red-600 hover:bg-red-700 text-white !text-xs !font-semibold"
+                        >
+                            <i class="fa-solid fa-ban"></i>
+                            Delete
+                        </NormalButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div
+            v-if="orders.links?.length && orders.data.length > 0"
+            class="flex items-center justify-center py-5"
+        >
+            <Pagination :links="orders?.links" />
+        </div>
     <!-- Table End -->
     </div>
 </template>
@@ -134,6 +202,8 @@ import formatMoney from '@/Helpers/formatMoney';
 import SelectBox from '@/Components/Atoms/SelectBox.vue';
 import { emitter } from '@/Helpers/emitter';
 import { router, usePage } from '@inertiajs/vue3';
+import Datepicker from '@/Components/Atoms/Datepicker.vue';
+import Pagination from '@/Components/Common/Pagination.vue';
 
 export default {
     components: {
@@ -148,7 +218,9 @@ export default {
         TableDataCell,
         TableActionCell,
         NormalButton,
-        Modal
+        Modal,
+        Datepicker,
+        Pagination
     },
     props: {
         collection: Object, // This will receive the data directly from the backend
@@ -161,19 +233,23 @@ export default {
         return{
             open: false,
             screenshot:null,
-            selected_collection: this.old_selected_collection || null
+            selected_collection: this.old_selected_collection || null,
+            filterDate : usePage().props.ziggy?.query?.date
         };
     },
     watch: {
         selected_collection: function () {
             this.handleCollectionChange(this.selected_collection);
+        },
+        filterDate(value){
+            this.handleDateChange(value)
         }
     },
-    computed:{
-        date(){
-            return usePage().props.ziggy?.query?.date;
-        }
-    },
+    // computed:{
+    //     date(){
+    //         return usePage().props.ziggy?.query?.date;
+    //     }
+    // },
     methods: {
         formatMoney,
         handleCollectionChange(id) {
@@ -181,14 +257,13 @@ export default {
                 preserveState: true,
             });
         },
-        handleDateChange(e){
-            console.log(e)
+        handleDateChange(value){
             let search =usePage().props.ziggy.query?.search
-            const formattedDate = new Date(e.target.value).toLocaleDateString('en-GB', {
+            const formattedDate = new Date(value).toLocaleDateString('en-GB', {
                                     day: '2-digit',
                                     month: '2-digit',
                                     year: '2-digit'
-                                }).replace(/\//g, '-'); 
+                                }).replace(/\//g, '-');
             router.get(route('admin.orders.index',{search,date : formattedDate }))
         },
         async destroy(model, url, confirmationOptions = null){

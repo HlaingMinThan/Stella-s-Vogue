@@ -50,7 +50,7 @@ class OrderController extends Controller
                 ->when($formattedDate, function ($q) use ($formattedDate) {
                     return $q->whereDate('created_at', $formattedDate);
                 })
-                ->latest()
+                ->orderBy('created_at', 'desc')
                 ->paginate(10)
                 ->through(fn($order) => [
                     ...$order->toArray(),
