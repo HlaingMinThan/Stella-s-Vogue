@@ -32,8 +32,9 @@
                                 <TableHeaderCell label="ID" />
                                 <TableHeaderCell label="Name" />
                                 <TableHeaderCell label="Color" />
+                                <TableHeaderCell label="Price Per roduct" />
                                 <TableHeaderCell label="Pcs" />
-                                <TableHeaderCell label="Price" />
+                                <TableHeaderCell label="Total Price" />
                                 <TableHeaderCell label="Actions" />
                             </template>
 
@@ -41,8 +42,9 @@
                                 <TableDataCell>{{ item.id }}</TableDataCell>
                                 <TableDataCell>{{ item.order.name }}</TableDataCell>
                                 <TableDataCell>{{ item.color }}/ {{ item.size }}</TableDataCell>
-                                <TableDataCell>{{ item.pcs ?? 0 }}</TableDataCell>
                                 <TableDataCell>{{ item.amount }}</TableDataCell>
+                                <TableDataCell>{{ item.pcs ?? 0 }}</TableDataCell>
+                                <TableDataCell>{{ item.amount * item.pcs }}</TableDataCell>
                                 <TableActionCell>
                                     <InertiaLinkButton
                                         :preserve-scroll="false"

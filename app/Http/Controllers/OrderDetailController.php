@@ -65,7 +65,7 @@ class OrderDetailController extends Controller
             'collection_id' => $collection->id,
             'color' => request('color'),
             'pcs' => request('pcs'),
-            'amount' => request('amount') * request('pcs'),
+            'amount' => request('amount'),
             'size' => request('size')
         ]);
 
@@ -87,7 +87,7 @@ class OrderDetailController extends Controller
         $orderDetail->collection->save();
         $orderDetail->color = request('color');
         $orderDetail->pcs = request('pcs');
-        $orderDetail->amount = request('amount') * $orderDetail->pcs;
+        $orderDetail->amount = request('amount');
         $orderDetail->size = request('size');
         $orderDetail->save();
 
