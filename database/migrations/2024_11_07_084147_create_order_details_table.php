@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('collection_id');
             $table->string('color');
             $table->string('size');
+            $table->string('pcs');
             $table->decimal('amount', 8, 2)->default(0);
             $table->timestamps();
         });

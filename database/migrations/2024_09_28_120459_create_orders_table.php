@@ -13,16 +13,13 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('collection_id');
             $table->string('name');
-            $table->text('address');
-            $table->string('phone');
+            $table->text('address')->nullable();
+            $table->string('phone')->nullable();
             $table->enum('payment', PaymentOption::all());
             $table->string('screenshot')->nullable();
-            $table->string('color');
-            $table->unsignedBigInteger('delivery_id');
+            $table->unsignedBigInteger('delivery_id')->nullable();
             $table->text('notes')->nullable();
-            $table->decimal('amount', 8, 2)->default(0);
             $table->timestamps();
         });
     }

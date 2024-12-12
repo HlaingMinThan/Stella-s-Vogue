@@ -28,7 +28,7 @@ class LoginController extends Controller
         if ($user && $user->role_id !== $userRole) {
             if (Auth::attempt($request->only('email', 'password'))) {
                 if (Auth::user()->isAdmin()) {
-                    return to_route('admin.dashboard');
+                    return to_route('admin.collections.index');
                 }
                 return to_route('admin.orders.index');
             } else {

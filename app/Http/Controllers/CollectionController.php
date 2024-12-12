@@ -96,7 +96,7 @@ class CollectionController extends Controller
         $collection->update($validatedData);
 
         // Redirect back with a success message
-        return redirect()->route('admin.collections.index')->with('success', 'Collection updated successfully!');
+        return redirect()->route('admin.order_details.index', ['collection' => $collection->id])->with('success', 'Collection updated successfully!');
     }
 
     public function destroy(Collection $collection)

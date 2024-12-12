@@ -46,33 +46,32 @@ class DatabaseSeeder extends Seeder
             "slug" => 's_o',
         ]);
 
-        // $olivia = Collection::factory()
-        //     ->create([
-        //         'name' => 'olivia'
-        //     ]);
+        $olivia = Collection::factory()
+            ->create([
+                'name' => 'olivia'
+            ]);
         // //kpay 2 ways with royal on september 20000
-        // Order::factory()->create([
-        //     'collection_id' => $olivia->id,
-        //     'color' => 'red',
-        //     'name' => 'hlaing min',
-        //     'address' => 'yangon',
-        //     'phone' => '09942377',
-        //     'delivery_id' => $royal->id,
-        //     'payment' => 'kpay',
-        //     'amount' => '10000',
-        //     'created_at' => '2024-09-01'
-        // ]);
-        // Order::factory()->create([
-        //     'collection_id' => $olivia->id,
-        //     'color' => 'red',
-        //     'name' => 'aungaung',
-        //     'address' => 'yangon',
-        //     'phone' => '09942377',
-        //     'delivery_id' => $royal->id,
-        //     'payment' => 'kpay',
-        //     'amount' => '10000',
-        //     'created_at' => '2024-09-01'
-        // ]);
+        $order = Order::factory()->create([
+            'name' => 'hlaing min',
+        ]);
+        $order->orderDetails()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'size' => 'L',
+            'amount' => '20000',
+            'pcs' => 1
+        ]);
+        $khinOrder = Order::factory()->create([
+            'name' => 'Khin Khin',
+        ]);
+
+        $khinOrder->orderDetails()->create([
+            'collection_id' => $olivia->id,
+            'color' => 'red',
+            'size' => 'L',
+            'amount' => '20000',
+            'pcs' => 2
+        ]);
         // //wave 3 ways with royal on september
         // Order::factory()->create([
         //     'collection_id' => $olivia->id,

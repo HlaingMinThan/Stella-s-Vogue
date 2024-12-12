@@ -31,7 +31,7 @@
                             <template #table-header>
                                 <TableHeaderCell label="ID" />
                                 <TableHeaderCell label="Name" />
-                                <TableHeaderCell label="Fabric" class="min-w-[150px]"/>
+                                <!-- <TableHeaderCell label="Fabric" class="min-w-[150px]"/>
                                 <TableHeaderCell label="Under" class="min-w-[150px]" />
                                 <TableHeaderCell label="Sample Pattern" class="min-w-[180px]"/>
                                 <TableHeaderCell label="Sew Fees" class="min-w-[150px]" />
@@ -43,7 +43,7 @@
                                 <TableHeaderCell label="Extra" class="min-w-[150px]" />
                                 <TableHeaderCell label="Taxi" class="min-w-[150px]" />
                                 <TableHeaderCell label="GA + Vlog" class="min-w-[150px]" />
-                                <TableHeaderCell label="Sum" class="min-w-[180px]" />
+                                <TableHeaderCell label="Sum" class="min-w-[180px]" /> -->
                                 <TableHeaderCell label="Stock" class="min-w-[150px]" />
                                 <TableHeaderCell label="Actions" class="min-w-[150px]" />
                             </template>
@@ -51,7 +51,7 @@
                             <template #table-data="{ item }">
                                 <TableDataCell>{{ item.id }}</TableDataCell>
                                 <TableDataCell>{{ item.name }}</TableDataCell>
-                                <TableDataCell><span class="font-bold">{{ formatMoney(item.fabric) }} MMK</span></TableDataCell>
+                                <!-- <TableDataCell><span class="font-bold">{{ formatMoney(item.fabric) }} MMK</span></TableDataCell>
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.under) }} MMK</span></TableDataCell>
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.sample_pattern) }} MMK</span></TableDataCell>
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.sew_fees) }} MMK</span></TableDataCell>
@@ -63,7 +63,7 @@
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.extra_charges) }} MMK</span></TableDataCell>
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.taxi_charges) }} MMK</span></TableDataCell>
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.ga__vlog_charges) }} MMK</span></TableDataCell>
-                                <TableDataCell><span class="font-bold">{{ formatMoney(item.sum) }} MMK</span></TableDataCell>
+                                <TableDataCell><span class="font-bold">{{ formatMoney(item.sum) }} MMK</span></TableDataCell> -->
                                 <TableDataCell><span class="font-bold">{{ item.stock }}</span></TableDataCell>
                                 <TableActionCell>
                                     <InertiaLinkButton
@@ -72,7 +72,7 @@
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
                                     >
                                         <i class="fa-solid fa-eye"></i>
-                                        Edit
+                                        Refill
                                     </InertiaLinkButton>
                                     <NormalButton
                                         v-if="item.deletable"
@@ -89,7 +89,7 @@
                                         Delete
                                     </NormalButton>
                                     <InertiaLinkButton
-                                        :href="route('admin.orders.index', { collection_id: item?.id })"
+                                        :href="route('admin.order_details.index', { collection: item?.id })"
                                         class="bg-yellow-600 hover:bg-yellow-700 text-white !text-xs !font-semibold"
                                     >
                                         <i class="fa-solid fa-eye"></i>

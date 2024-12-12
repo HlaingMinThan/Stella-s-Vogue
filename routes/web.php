@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\ReportController;
 use App\Http\Middleware\MustBeAdminMiddleware;
 use App\Http\Middleware\MustBeAuthUser;
@@ -49,6 +50,13 @@ Route::middleware(MustBeAuthUser::class)
         Route::post('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware([MustBeStaffUser::class]);
         Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
 
+        // order details
+        Route::get('/collections/{collection}/order_details', [OrderDetailController::class, 'index'])->name('order_details.index')->middleware([MustBeStaffUser::class]);
+        Route::get('/collections/{collection}/order_details/create', [OrderDetailController::class, 'create'])->name('order_details.create')->middleware([MustBeStaffUser::class]);
+        Route::post('/collections/{collection}/order_details/store', [OrderDetailController::class, 'store'])->name('order_details.store')->middleware([MustBeStaffUser::class]);
+        Route::get('order_details/{orderDetail}/edit', [OrderDetailController::class, 'edit'])->name('order_details.edit')->middleware([MustBeStaffUser::class]);
+        Route::post('order_details/{orderDetail}/update', [OrderDetailController::class, 'update'])->name('order_details.update')->middleware([MustBeStaffUser::class]);
+        Route::delete('order_details/{orderDetail}/delete', [OrderDetailController::class, 'destroy'])->name('order_details.destroy')->middleware([MustBeStaffUser::class]);
 
         Route::post('logout', [LogoutController::class, 'destroy'])
             ->name('logout');
