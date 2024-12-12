@@ -80,6 +80,9 @@ class OrderDetailController extends Controller
             'pcs' => 'required|min:1',
             'amount' => 'required|numeric',
         ]);
+        if ($orderDetail->collection->stock + $orderDetail->pcs < request('pcs')) {
+            return back()->with('error', 'Not enough stock');
+        }
         $orderDetail->collection->stock = $orderDetail->collection->stock + $orderDetail->pcs - request('pcs');
         $orderDetail->collection->save();
         $orderDetail->color = request('color');

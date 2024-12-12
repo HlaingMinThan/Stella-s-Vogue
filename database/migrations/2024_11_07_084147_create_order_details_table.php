@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('color');
             $table->string('size');
             $table->string('pcs');
-            $table->decimal('amount', 8, 2)->default(0);
+            $table->unsignedBigInteger('amount')->default(0);
             $table->timestamps();
         });
         Artisan::call('handle:order-details');
