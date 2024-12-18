@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->decimal("extra_charges")->default(0);
             $table->decimal("taxi_charges")->default(0);
             $table->decimal("ga__vlog_charges")->default(0);
-            $table->integer("stock")->default(0);
+            // $table->integer("stock")->default(0);
             $table->timestamps();
         });
     }

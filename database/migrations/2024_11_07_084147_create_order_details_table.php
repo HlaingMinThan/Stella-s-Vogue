@@ -14,9 +14,7 @@ return new class extends Migration {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('collection_id');
-            $table->string('color');
-            $table->string('size');
+            $table->unsignedBigInteger('collection_detail_id');
             $table->string('pcs');
             $table->unsignedBigInteger('amount')->default(0);
             $table->timestamps();

@@ -22,11 +22,23 @@ class Collection extends Model
 
     public function getOrderTotalAttribute()
     {
-        return $this->orderDetails->sum('amount');
+        return $this->collectionDetails()
+            ->whereHas('orderDetails')
+            ->with('orderDetails')
+            ->get()
+            ->flatMap(function ($collectionDetail) {
+                return $collectionDetail->orderDetails;
+            })
+            ->sum('amount');
     }
 
-    public function orderDetails()
+    public function collectionDetails()
     {
-        return $this->hasMany(OrderDetail::class, 'collection_id');
+        return $this->hasMany(CollectionDetail::class);
     }
+
+    // public function orderDetails()
+    // {
+    //     return $this->hasMany(OrderDetail::class, 'collection_id');
+    // }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Collection;
+use App\Models\CollectionDetail;
 use Illuminate\Http\Request;
 
 class CollectionController extends Controller
@@ -30,7 +31,7 @@ class CollectionController extends Controller
                     'taxi_charges' => $collection->taxi_charges,
                     'stock' => $collection->stock,
                     'sum' => $collection->sum, // Access the virtual property
-                    'deletable' => !$collection->orderDetails()->exists(),
+                    'deletable' => !$collection->collectionDetails()->whereHas('orderDetails')->exists(),
                 ]),
         ]);
     }
@@ -42,32 +43,47 @@ class CollectionController extends Controller
     public function edit(Collection $collection)
     {
         return inertia("Admin/Collections/Edit", [
-            'collection' => $collection
+            'collection' => $collection,
+            'collection_details' => $collection->collectionDetails
         ]);
     }
 
     public function store()
     {
         $validatedData = request()->validate([
-            'name' => 'required|string|max:255',
-            'fabric' => 'required|integer',
-            'under' => 'required|integer',
-            'sample_pattern' => 'required|integer',
-            'sew_fees' => 'required|integer',
-            'model_fees' => 'required|integer',
-            'model_deli_fees' => 'nullable|integer',
-            'boosting' => 'nullable|integer',
-            'phone_bill' => 'nullable|integer',
-            'packing_fees' => 'nullable|integer',
-            'extra_charges' => 'nullable|integer',
-            'taxi_charges' => 'nullable|integer',
-            'ga__vlog_charges' => 'nullable|integer',
-            'stock' => 'required|integer',
+            'collection_name' => ['required'],
+            'collection_details' => ['required', 'array'], // Ensure `collection_details` is an array
+            'collection_details.*.color.value' => ['required', 'string'], // Validate `value` under `color`
+            'collection_details.*.price.value' => ['required', 'string'], // Validate `value` under `color`
+            'collection_details.*.size.value' => ['required', 'string'], // Validate `value` under `size`
+            'collection_details.*.stock.value' => ['required', 'integer'], // Validate `value` under `stock`
+        ], [
+            'collection_name.required' => 'The collection name is required.',
+            'collection_details.required' => 'Collection details are required.',
+            'collection_details.*.color.value.required' => 'Color is required for each collection detail.',
+            'collection_details.*.color.value.string' => 'Color must be a string.',
+            'collection_details.*.price.value.required' => 'Price is required for each collection detail.',
+            'collection_details.*.size.value.required' => 'Size is required for each collection detail.',
+            'collection_details.*.size.value.string' => 'Size must be a string.',
+            'collection_details.*.stock.value.required' => 'Stock is required for each collection detail.',
+            'collection_details.*.stock.value.integer' => 'Stock must be an integer.',
         ]);
 
         // Create the collection
-        Collection::create($validatedData);
+        $collection = Collection::create([
+            'name' => $validatedData['collection_name']
+        ]);
 
+        foreach ($validatedData['collection_details'] as $collection_detail) {
+            CollectionDetail::create([
+                'collection_id' => $collection->id,
+                'color' => $collection_detail['color']['value'],
+                'size' => $collection_detail['size']['value'],
+                'price' => $collection_detail['price']['value'],
+                'total_stock' => $collection_detail['stock']['value'],
+                'in_stock' => $collection_detail['stock']['value'],
+            ]);
+        }
         // Redirect back or to a specific route with success message
         return redirect()->route('admin.collections.index')->with('success', 'Collection created successfully!');
     }
@@ -75,25 +91,68 @@ class CollectionController extends Controller
     public function update(Request $request, Collection $collection)
     {
         // Validate the incoming data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'fabric' => 'required|numeric|min:0',
-            'under' => 'required|numeric|min:0',
-            'sample_pattern' => 'required|numeric|min:0',
-            'sew_fees' => 'required|numeric|min:0',
-            'model_fees' => 'required|numeric|min:0',
-            'model_deli_fees' => 'required|numeric|min:0',
-            'boosting' => 'required|numeric|min:0',
-            'phone_bill' => 'required|numeric|min:0',
-            'packing_fees' => 'required|numeric|min:0',
-            'extra_charges' => 'required|numeric|min:0',
-            'taxi_charges' => 'required|numeric|min:0',
-            'ga__vlog_charges' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:0',
+        // $validatedData = $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'fabric' => 'required|numeric|min:0',
+        //     'under' => 'required|numeric|min:0',
+        //     'sample_pattern' => 'required|numeric|min:0',
+        //     'sew_fees' => 'required|numeric|min:0',
+        //     'model_fees' => 'required|numeric|min:0',
+        //     'model_deli_fees' => 'required|numeric|min:0',
+        //     'boosting' => 'required|numeric|min:0',
+        //     'phone_bill' => 'required|numeric|min:0',
+        //     'packing_fees' => 'required|numeric|min:0',
+        //     'extra_charges' => 'required|numeric|min:0',
+        //     'taxi_charges' => 'required|numeric|min:0',
+        //     'ga__vlog_charges' => 'required|numeric|min:0',
+        //     'stock' => 'required|numeric|min:0',
+        // ]);
+        $validatedData = request()->validate([
+            'collection_name' => ['required'],
+            'collection_details' => ['required', 'array'],
+            'collection_details.*.id' => ['nullable'],
+            'collection_details.*.color.value' => ['required', 'string'],
+            'collection_details.*.price.value' => ['required'],
+            'collection_details.*.size.value' => ['required', 'string'],
+            'collection_details.*.stock.value' => ['required', 'integer'],
+        ], [
+            'collection_name.required' => 'The collection name is required.',
+            'collection_details.required' => 'Collection details are required.',
+            'collection_details.*.color.value.required' => 'Color is required for each collection detail.',
+            'collection_details.*.color.value.string' => 'Color must be a string.',
+            'collection_details.*.price.value.required' => 'Price is required for each collection detail.',
+            'collection_details.*.size.value.required' => 'Size is required for each collection detail.',
+            'collection_details.*.size.value.string' => 'Size must be a string.',
+            'collection_details.*.stock.value.required' => 'Stock is required for each collection detail.',
+            'collection_details.*.stock.value.integer' => 'Stock must be an integer.',
         ]);
 
+        foreach ($validatedData['collection_details'] as $collectionDetail) {
+            if (key_exists('id', $collectionDetail)) {
+                $existCollectionDetail = CollectionDetail::where('id', $collectionDetail['id'])->first();
+                $existCollectionDetail->update([
+                    'color' => $collectionDetail['color']['value'],
+                    'size' => $collectionDetail['size']['value'],
+                    'price' => $collectionDetail['price']['value'],
+                    'total_stock' => $collectionDetail['stock']['value'],
+                    'in_stock' => ($collectionDetail['stock']['value'] - $existCollectionDetail->total_stock) + $existCollectionDetail->in_stock
+                ]);
+            } else {
+                CollectionDetail::create([
+                    'collection_id' => $collection->id,
+                    'color' => $collectionDetail['color']['value'],
+                    'size' => $collectionDetail['size']['value'],
+                    'price' => $collectionDetail['price']['value'],
+                    'total_stock' => $collectionDetail['stock']['value'],
+                    'in_stock' => $collectionDetail['stock']['value']
+                ]);
+            }
+        }
+
         // Update the collection with validated data
-        $collection->update($validatedData);
+        $collection->update([
+            'name' => $validatedData['collection_name']
+        ]);
 
         // Redirect back with a success message
         return redirect()->route('admin.order_details.index', ['collection' => $collection->id])->with('success', 'Collection updated successfully!');

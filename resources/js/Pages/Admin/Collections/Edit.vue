@@ -5,7 +5,7 @@
                 <BreadcrumbItem label="Edit" />
             </Breadcrumb>
         </div>
-        <CollectionForm :initialForm="collection" :isEditMode="true" />
+        <CollectionForm :collection="collection" :collection_details_prop="collection_details" :isEditMode="true" />
     </div>
 </template>
   
@@ -21,7 +21,8 @@ export default {
         BreadcrumbItem,
     },
     props : {
-        collection: Object
+        collection: Object,
+        collection_details : Object
     }
 };
 </script>

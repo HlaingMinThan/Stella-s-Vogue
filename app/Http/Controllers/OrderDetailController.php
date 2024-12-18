@@ -6,19 +6,22 @@ use App\Models\Collection;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class OrderDetailController extends Controller
 {
     public function index(Collection $collection)
     {
         $searchTerm = request('search');
-        return inertia("Admin/OrderDetails/Index", [
-            'order_details' => $collection->orderDetails()
-                ->with('order', 'collection')
+        return Inertia::render("Admin/OrderDetails/Index", [
+            'order_details' => OrderDetail::whereHas('collectionDetail', function ($query) use ($collection) {
+                $query->where('collection_id', $collection->id);
+            })
                 ->whereHas('order', function ($query) use ($searchTerm) {
                     $query->where('name', 'like', '%' . $searchTerm . '%');
                 })
-                ->paginate(),
+                ->with(['collectionDetail', 'order'])
+                ->paginate(15),
             'collection' => $collection
         ]);
     }

@@ -1,21 +1,42 @@
 <template>
     <div class="my-3 bg-gray-100 p-5 rounded-xl">
         <form @submit.prevent="submitForm">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div v-for="(field, key) in fields" :key="key">
-                    <label :for="key" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+            <div class="flex flex-col ">
+                <div>
+                    <label  class="block text-sm font-medium text-gray-700">Collection Name</label>
                     <input
-                        v-model="form[key]"
-                        :type="field.type"
-                        :id="key"
+                        v-model="collection_name"
+                        type="text"
                         class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        :required="field.required"
+                        :required="true"
                     />
+                    <p class="text-xs pt-1 font-medium text-red-500" v-if="errors && errors['collection_name']">{{ errors[`collection_name`] }}</p>
                 </div>
+                <div v-for="(collection_detail,index) in collection_details" v-key="index" 
+                :class="[index !== collection_details.length - 1 ? 'border-b-[1px] border-black/20' :'']"
+                class="grid grid-cols-1 sm:grid-cols-4 gap-6 py-10 relative">
+                    <div v-if="collection_details.length > 1 " @click="removeCollectionDetail(index)" class="absolute top-[10px] right-0 text-red-500 w-[30px] h-[30px] border-[1px] border-red-500 flex items-center justify-center rounded-md hover:bg-red-500 hover:text-white cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M18 12.998H6a1 1 0 0 1 0-2h12a1 1 0 0 1 0 2"/></svg></div>
+                        <div v-for="(field, key) in collection_detail" v-show="key !== 'id'" :key="key"
+                        >
+                            <label :for="key" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                            <input
+                                v-model="field.value"
+                                :type="field.type"
+                                :id="key"
+                                class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                :class="[duplicates.includes(`${collection_detail.color.value}-${collection_detail.size.value}-${index}`) ? 'border-[1px] border-red-500' :'border-gray-300']"
+                                :required="field.required"
+                            />
+                            <p class="text-xs pt-1 font-medium text-red-500" v-if="errors && errors[`collection_details.${index}.${key}.value`]">{{ errors[`collection_details.${index}.${key}.value`] }}</p>
+                        </div>
+                        <p v-if="errors && duplicates.includes(`${collection_detail.color.value}-${collection_detail.size.value}-${index}`)" class="text-sm font-medium text-red-500">{{ errors }}</p>
+                    </div>
             </div>
-  
+            <div @click="addNewCollectionDetail" class="w-[30px] h-[30px] border-[1px] flex items-center justify-center rounded-sm mt-5 cursor-pointer  hover:bg-primary hover:border-transparent hover:text-white border-black/20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"/></svg>
+            </div>
             <div class="mt-6">
-                <button type="submit" class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <button type="submit" :disabled="duplicates.length > 0" class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                     {{ isEditMode ? 'Update Collection' : 'Create Collection' }}
                 </button>
             </div>
@@ -26,33 +47,28 @@
 <script>
 export default {
     props: {
-        initialForm: {
-            type: Object,
-            default: () => ({
-                name: '',
-                fabric: 0,
-                under: 0,
-                sample_pattern: 0,
-                sew_fees: 0,
-                model_fees: 0,
-                model_deli_fees: 0,
-                boosting: 0,
-                phone_bill: 0,
-                packing_fees: 0,
-                extra_charges: 0,
-                taxi_charges: 0,
-                ga__vlog_charges: 0,
-                stock: 0,
-            }),
+        collection:{
+            type : Object
         },
         isEditMode: {
             type: Boolean,
             default: false,
         },
+        collection_details_prop : {
+            type : Object
+        }
+    },
+    watch : {
+        'collection_details':{
+        handler() {
+            this.validateCollectionDetails()
+            console.log(this.duplicates)
+        },
+        deep: true
+    }
     },
     data() {
         return {
-            form: { ...this.initialForm },
             fields: {
                 name: { label: 'Collection Name', type: 'text', required: true },
                 // fabric: { label: 'Fabric Cost', type: 'number', required: true },
@@ -69,15 +85,76 @@ export default {
                 // ga__vlog_charges: { label: 'GA/Vlog Charges', type: 'number', required: true },
                 stock: { label: 'Stock', type: 'number', required: true },
             },
+            collection_name : '',
+            collection_details : [{
+                color : {label : 'Color', type : 'text',required : true , value : ''},
+                size : {label : 'Size', type : 'text',required : true,value :''},
+                price : {label : 'Price', type : 'text',required : true,value : ''},
+                stock: { label: 'Stock', type: 'number', required: true,value : '' },
+            }],
+            duplicateError : null,
+            duplicates : [],
+            errors : null
         };
     },
     methods: {
         submitForm() {
+            if(this.duplicates.length > 0) return;
             const routeName = this.isEditMode ? 'admin.collections.update' : 'admin.collections.store';
             const method = this.isEditMode ? 'put' : 'post';
-            this.$inertia[method](route(routeName, { collection: this.initialForm.id }), this.form);
+            this.$inertia[method](route(routeName, { collection: this.collection?.id }), {collection_details : this.collection_details,collection_name : this.collection_name},{
+                onError : (e) => {
+                    this.errors = e
+                    console.log(e)
+                }
+            });
         },
+        addNewCollectionDetail(){
+            let collectionDetailField = {
+                color : {label : 'Color', type : 'text',required : false ,value : ''},
+                size : {label : 'Size', type : 'text',required : true ,value : ''},
+                price : {label : 'Price', type : 'text',required : true ,value : ''},
+                stock: { label: 'Stock', type: 'number', required: true ,value : ''},
+            }
+            this.collection_details = [...this.collection_details,collectionDetailField]
+        },
+        removeCollectionDetail(index){
+            this.collection_details.splice(index,1)
+        },
+        validateCollectionDetails() {
+            const seen = new Set();
+            this.duplicates = []
+            for (let i = 0 ; i <  this.collection_details.length ; i++) {
+                const key = `${this.collection_details[i].color.value}-${this.collection_details[i].size.value}`;
+                const duplicateKey = `${this.collection_details[i].color.value}-${this.collection_details[i].size.value}-${i}`;;
+                if (seen.has(key)) {
+                    this.duplicates.push(duplicateKey);
+                } else {
+                    seen.add(key);
+                }
+            }
+            
+            if (this.duplicates.length > 0) {
+                this.duplicateError = `${this.collection_name} ${this.duplicates[0].split('-').slice(0,this.duplicates[0].split('-').length - 1).join('/')} is already exists.`;
+            } else {
+                this.duplicateError = null;
+            }
+        }
     },
+    mounted(){
+        if(this.isEditMode){
+            this.collection_name = this.collection.name
+            this.collection_details = this.collection_details_prop.map(collectionDetail => {
+                return {
+                    id : collectionDetail.id,
+                    color : {label : 'Color', type : 'text',required : true ,value : collectionDetail.color},
+                    size : {label : 'Size', type : 'text',required : true ,value : collectionDetail.size},
+                    price : {label : 'Price', type : 'text',required : true ,value : collectionDetail.price},
+                    stock: { label: 'Stock', type: 'number', required: true ,value : collectionDetail.total_stock},
+                }
+            });
+        }
+    }
 };
 </script>
   

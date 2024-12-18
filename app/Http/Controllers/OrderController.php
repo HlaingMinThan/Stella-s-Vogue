@@ -15,6 +15,8 @@ class OrderController extends Controller
 {
     public function index()
     {
+        dd('hit');
+
         request()->validate([
             'collection_id' => 'nullable|exists:collections,id',
         ]);
@@ -34,9 +36,9 @@ class OrderController extends Controller
         $collection = \App\Models\Collection::find(request('collection_id'));
         return inertia("Admin/Orders/Index", [
             'collections' => \App\Models\Collection::latest()->get(),
-            'orders' => \App\Models\Order::with('collection', 'delivery', 'orderDetails') // Eager load orderDetails
+            'orders' => \App\Models\Order::with('collection', 'collection.collectionDetails', 'delivery', 'orderDetails') // Eager load orderDetails
                 ->when(request('collection_id'), function ($q) {
-                    return $q->where('collection_id', request('collection_id'));
+                    return $q->where('collection.collectionDetails.collection_id', request('collection_id'));
                 })
                 ->where(function ($q) {
                     $q->where('name', 'like', '%' . request('search') . '%')
@@ -136,8 +138,8 @@ class OrderController extends Controller
             $requestDate = Carbon::parse($request->created_at)->format('Y-m-d');
 
             $orderCreatedAt = Carbon::parse($order->created_at)->format('Y-m-d');
-            if($requestDate != $orderCreatedAt){
-            $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');
+            if ($requestDate != $orderCreatedAt) {
+                $order->created_at =  Carbon::parse($request->created_at)->format('Y-m-d H:i:s');
             }
         }
         // Handle file upload if a screenshot is provided

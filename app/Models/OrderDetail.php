@@ -14,6 +14,11 @@ class OrderDetail extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function collectionDetail()
+    {
+        return $this->belongsTo(CollectionDetail::class);
+    }
+
     public function collection()
     {
         return $this->belongsTo(Collection::class);
