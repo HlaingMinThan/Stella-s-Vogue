@@ -29,7 +29,7 @@
                             />
                             <p class="text-xs pt-1 font-medium text-red-500" v-if="errors && errors[`collection_details.${index}.${key}.value`]">{{ errors[`collection_details.${index}.${key}.value`] }}</p>
                         </div>
-                        <p v-if="errors && duplicates.includes(`${collection_detail.color.value}-${collection_detail.size.value}-${index}`)" class="text-sm font-medium text-red-500">{{ errors }}</p>
+                        <p v-if="duplicateError && duplicates.includes(`${collection_detail.color.value}-${collection_detail.size.value}-${index}`)" class="text-sm font-medium text-red-500">{{ duplicateError }}</p>
                     </div>
             </div>
             <div @click="addNewCollectionDetail" class="w-[30px] h-[30px] border-[1px] flex items-center justify-center rounded-sm mt-5 cursor-pointer  hover:bg-primary hover:border-transparent hover:text-white border-black/20">

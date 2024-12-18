@@ -5,6 +5,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
+use App\Http\Controllers\RefillController;
 use App\Http\Controllers\ReportController;
 use App\Http\Middleware\MustBeAdminMiddleware;
 use App\Http\Middleware\MustBeAuthUser;
@@ -57,6 +58,9 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('order_details/{orderDetail}/edit', [OrderDetailController::class, 'edit'])->name('order_details.edit')->middleware([MustBeStaffUser::class]);
         Route::post('order_details/{orderDetail}/update', [OrderDetailController::class, 'update'])->name('order_details.update')->middleware([MustBeStaffUser::class]);
         Route::delete('order_details/{orderDetail}/delete', [OrderDetailController::class, 'destroy'])->name('order_details.destroy')->middleware([MustBeStaffUser::class]);
+
+        Route::get('/collection/{collection}/refill', [RefillController::class, 'index'])->name('refill.index');
+        Route::put('/collection/{collection}/refill', [RefillController::class, 'update'])->name('refill.update');
 
         Route::post('logout', [LogoutController::class, 'destroy'])
             ->name('logout');

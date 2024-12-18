@@ -68,7 +68,7 @@
                                 <TableActionCell>
                                     <InertiaLinkButton
                                         :preserve-scroll="false"
-                                        :href="route('admin.collections.edit', { collection: item?.id })"
+                                        :href="route('admin.refill.index', { collection: item?.id })"
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
                                     >
                                         <i class="fa-solid fa-eye"></i>

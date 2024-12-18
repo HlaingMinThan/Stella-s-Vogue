@@ -16,29 +16,21 @@
             <InputError class="mt-2" :message="form.errors?.name" />
           </div>
           <div>
-            <label for="color" class="block text-sm font-medium text-gray-700"
-              >Color</label
+            <label for="pcs" class="block text-sm font-medium text-gray-700"
+              >Collection Detail</label
             >
-            <input
-              v-model="form.color"
-              type="text"
-              id="color"
-              class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            />
-            <InputError class="mt-2" :message="form.errors?.color" />
-          </div>
-          <div>
-            <label for="size" class="block text-sm font-medium text-gray-700"
-              >Size</label
-            >
-            <input
-              v-model="form.size"
-              type="text"
-              id="size"
-              class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            />
-            <InputError class="mt-2" :message="form.errors?.size" />
-          </div>
+          <SelectBox
+                class="w-full bg-white"
+                :selected="selectedId"
+                v-model="form.collection_detail_id"
+                placeholder="Choose collection detail"
+                :options="collection_details.map(collectionDetail => ({
+                  label : `${collectionDetail.size}/${collectionDetail.color} (${!collectionDetail.in_stock ? 'Out of stock' : `left-${collectionDetail.in_stock}` })`,
+                  value : collectionDetail.id
+                }))"
+                :reduce="(option) => option.value"
+          />
+        </div>
           <div>
             <label for="pcs" class="block text-sm font-medium text-gray-700"
               >Pcs</label
@@ -50,18 +42,6 @@
               class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
             />
             <InputError class="mt-2" :message="form.errors?.pcs" />
-          </div>
-          <div>
-            <label for="price" class="block text-sm font-medium text-gray-700"
-              >Price (1pc price)</label
-            >
-            <input
-              v-model="form.amount"
-              type="text"
-              id="price"
-              class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            />
-            <InputError class="mt-2" :message="form.errors?.amount" />
           </div>
         </div>
   
@@ -96,13 +76,11 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
         type: Object,
         default: () => ({
           name: "",
-          color: "",
-          size: "",
           pcs: "",
-          amount: "",
         }),
       },
-      collection: Object,
+      collection:Object,
+      collection_details : Object,
       isEditMode: {
         type: Boolean,
         default: false,
@@ -112,12 +90,15 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
       return {
         form: this.$inertia.form({
           name: this.initialForm?.order?.name,
-          color: this.initialForm?.color,
-          size: this.initialForm?.size,
+          collection_detail_id : this.initialForm?.collection_detail_id,
           pcs: this.initialForm?.pcs,
-          amount: this.initialForm?.amount,
         }),
       };
+    },
+    computed:{ 
+      selectedId(){
+        return this.initialForm?.collection_detail_id
+      }
     },
     methods: {
       async submitForm() {
@@ -128,8 +109,8 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
           : "admin.order_details.store";
         await this.form.post(
           route(routeName, {
-            orderDetail: this.isEditMode ? this.initialForm.id : null,
-            collection : this.collection.id
+            orderDetail: this.isEditMode ? this.initialForm?.id : null,
+            collection: this.collection.id
           })
         );
       },
@@ -155,7 +136,6 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
       }
     },
     mounted(){
-      console.log(this.initialForm.created_at)
     }
   };
   </script>

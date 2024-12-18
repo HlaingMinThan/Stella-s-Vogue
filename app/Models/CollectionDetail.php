@@ -13,4 +13,9 @@ class CollectionDetail extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+
+    public function collection()
+    {
+        return $this->belongsTo(Collection::class);
+    }
 }

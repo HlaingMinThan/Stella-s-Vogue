@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Collection;
 use App\Models\CollectionDetail;
+use App\Models\Inventory;
 use Illuminate\Http\Request;
 
 class CollectionController extends Controller
@@ -75,13 +76,17 @@ class CollectionController extends Controller
         ]);
 
         foreach ($validatedData['collection_details'] as $collection_detail) {
-            CollectionDetail::create([
+            $collectionDetail = CollectionDetail::create([
                 'collection_id' => $collection->id,
                 'color' => $collection_detail['color']['value'],
                 'size' => $collection_detail['size']['value'],
                 'price' => $collection_detail['price']['value'],
                 'total_stock' => $collection_detail['stock']['value'],
                 'in_stock' => $collection_detail['stock']['value'],
+            ]);
+            Inventory::create([
+                'collection_detail_id' => $collectionDetail->id,
+                'stocks' => $collectionDetail->total_stock
             ]);
         }
         // Redirect back or to a specific route with success message

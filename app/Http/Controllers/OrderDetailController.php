@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Collection;
+use App\Models\CollectionDetail;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -22,21 +23,24 @@ class OrderDetailController extends Controller
                 })
                 ->with(['collectionDetail', 'order'])
                 ->paginate(15),
-            'collection' => $collection
+            'collection' => $collection,
+            'collection_details' => $collection->collectionDetails
         ]);
     }
 
     public function create(Collection $collection)
     {
         return inertia('Admin/OrderDetails/Create', [
-            'collection' => $collection
+            'collection' => $collection,
+            'collection_details' => $collection->collectionDetails
         ]);
     }
     public function edit(OrderDetail $orderDetail)
     {
         return inertia('Admin/OrderDetails/Edit', [
             'orderDetail' => $orderDetail->load('order', 'collection'),
-            'collection' => $orderDetail->collection
+            'collection' => $orderDetail->order->collection,
+            'collection_details' => $orderDetail->order->collection->collectionDetails,
         ]);
     }
 
@@ -45,31 +49,32 @@ class OrderDetailController extends Controller
 
         request()->validate([
             'name' => 'required',
-            'color' => 'required',
-            'size' => "required",
-            'pcs' => 'required|min:1',
-            'amount' => 'required|numeric',
+            'collection_detail_id' => 'required',
+            'pcs' => 'required|min:1|numeric',
         ]);
 
-        if ($collection->stock < request('pcs')) {
+        $collectionDetail = CollectionDetail::where('id', request('collection_detail_id'))->first();
+
+        if (!$collectionDetail) {
+            return back()->with('error', 'Collection Detail Not Found');
+        }
+
+        if ($collectionDetail->in_stock < request('pcs')) {
             return back()->with('error', 'Not enough stock');
         }
-        $collection->stock = $collection->stock - request('pcs');
-        $collection->save();
+        $collectionDetail->in_stock = $collectionDetail->in_stock - request('pcs');
+        $collectionDetail->save();
 
 
         $order = new Order();
+        $order->collection_id = $collection->id;
         $order->name = request('name');
         $order->save();
 
-
-
         $order->orderDetails()->create([
-            'collection_id' => $collection->id,
-            'color' => request('color'),
+            'collection_detail_id' => $collectionDetail->id,
             'pcs' => request('pcs'),
-            'amount' => request('amount'),
-            'size' => request('size')
+            'amount' => $collectionDetail->price * request('pcs'),
         ]);
 
         return to_route('admin.order_details.index', ['collection' => $collection->id])->with('success', 'Order created successfully!');
@@ -78,33 +83,42 @@ class OrderDetailController extends Controller
     {
         request()->validate([
             'name' => 'required',
-            'color' => 'required',
-            'size' => "required",
-            'pcs' => 'required|min:1',
-            'amount' => 'required|numeric',
+            'pcs' => 'required|min:1|numeric',
+            'collection_detail_id' => 'required'
         ]);
-        if ($orderDetail->collection->stock + $orderDetail->pcs < request('pcs')) {
+
+        $collectionDetail = CollectionDetail::where('id', request('collection_detail_id'))->first();
+
+
+        $remainStockCount = $collectionDetail->id != $orderDetail->collection_detail_id ? $collectionDetail->in_stock : ($collectionDetail->in_stock +   $orderDetail->pcs);
+        if ($remainStockCount < request('pcs')) {
             return back()->with('error', 'Not enough stock');
         }
-        $orderDetail->collection->stock = $orderDetail->collection->stock + $orderDetail->pcs - request('pcs');
-        $orderDetail->collection->save();
-        $orderDetail->color = request('color');
+        $orderDetail->collectionDetail->save();
+        $orderDetail->amount = $collectionDetail->price * request('pcs');
+        if ($orderDetail->collection_detail_id != request('collection_detail_id')) {
+            $orderDetail->collection_detail_id = request('collection_detail_id');
+            $orderDetail->collectionDetail->in_stock = $orderDetail->collectionDetail->in_stock + $orderDetail->pcs;
+            $collectionDetail->in_stock = $collectionDetail->in_stock - request('pcs');
+            $collectionDetail->save();
+        } else {
+            $orderDetail->collectionDetail->in_stock = $orderDetail->collectionDetail->in_stock + $orderDetail->pcs - request('pcs');
+        }
+        $orderDetail->collectionDetail->save();
         $orderDetail->pcs = request('pcs');
-        $orderDetail->amount = request('amount');
-        $orderDetail->size = request('size');
         $orderDetail->save();
 
         $order = $orderDetail->order;
         $order->name = request('name');
         $order->save();
 
-        return to_route('admin.order_details.index', ['collection' => $orderDetail->collection->id])->with('success', 'Order updated successfully!');
+        return to_route('admin.order_details.index', ['collection' => $collectionDetail->collection->id])->with('success', 'Order updated successfully!');
     }
 
     public function destroy(OrderDetail $orderDetail)
     {
-        $orderDetail->collection->stock = $orderDetail->collection->stock + $orderDetail->pcs;
-        $orderDetail->collection->save();
+        $orderDetail->collectionDetail->in_stock = $orderDetail->collectionDetail->in_stock + $orderDetail->pcs;
+        $orderDetail->collectionDetail->save();
         $orderDetail->order->delete();
         $orderDetail->delete();
 

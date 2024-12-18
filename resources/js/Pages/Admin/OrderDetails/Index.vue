@@ -1,19 +1,36 @@
 <template>
     <div class="min-h-screen py-3 space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-2" v-if="!date">
-            <div class="flex items-center space-x-5">
-                <h2 v-if="collection.stock" class="text-2xl font-semibold">{{collection.name.toUpperCase()}} Collection Left Stock - <span>{{collection.stock}}</span></h2> 
-                <h2  v-else class="text-2xl font-semibold">{{collection.name.toUpperCase()}} Out Of Stock - <span class="text-red-500 underline cursor-pointer" @click="$inertia.get(route('admin.collections.edit',{collection: collection.id}))">Refill</span></h2> 
-            </div>
-
-            <!-- Create Button -->
-            <div  v-if="collection.stock" class="min-w-[270px] md:flex items-center justify-end">
-                <InertiaLinkButton :href="route('admin.order_details.create',{ collection:collection.id })" class="w-full md:w-auto bg-primary text-white">
-                    <i class="fa-solid fa-file-circle-plus mr-1"></i>
-                    Create
-                </InertiaLinkButton>
+        <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold ">Remaining Stocks({{collection.name}})</h1>
+        <InertiaLinkButton :href="route('admin.refill.update',{ collection:collection.id })" class="w-full md:w-auto bg-primary text-white">
+                <i class="fa-solid fa-file-circle-plus mr-1"></i>
+                Refill
+            </InertiaLinkButton>
+    </div>
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-3">
+            <div class="flex mb-2 flex-col gap-2 px-5 py-4 text-white rounded-lg bg-primary items-center " v-for="collectionDetail in collection_details">
+                <div class="flex items-center w-[80%] justify-between gap-4">
+                    <p class="">{{ collectionDetail.color }} / {{ collectionDetail.size }}</p>
+                    <p> {{ collectionDetail.in_stock }}</p>
+                </div>
+                <!-- <div class="flex items-center  w-[80%] gap-4">
+                    <p class=" shrink-0 w-[60%] font-bold">Size -</p>
+                    <p>{{ collectionDetail.size }}</p>
+                </div>
+                <div class="flex items-center  w-[80%] gap-4">
+                    <p class=" shrink-0 font-bold w-[60%]">In stock -</p>
+                    <p>{{ collectionDetail.in_stock }} <span class='text-sm'>items</span></p>
+                </div> -->
             </div>
         </div>
+        <div  class="min-w-[270px] md:flex items-center justify-end">
+            <InertiaLinkButton :href="route('admin.order_details.create',{ collection:collection.id })" class="w-full md:w-auto bg-primary text-white">
+                <i class="fa-solid fa-file-circle-plus mr-1"></i>
+                Create
+            </InertiaLinkButton>
+        </div>
+
+        
 
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 px-5 py-3">
@@ -41,7 +58,7 @@
                             <template #table-data="{ item }">
                                 <TableDataCell>{{ item.id }}</TableDataCell>
                                 <TableDataCell>{{ item.order.name }}</TableDataCell>
-                                <TableDataCell>{{ item.color }}/ {{ item.size }}</TableDataCell>
+                                <TableDataCell>{{ item.collection_detail.color }}/ {{ item.collection_detail.size }}</TableDataCell>
                                 <TableDataCell>{{ item.amount }}</TableDataCell>
                                 <TableDataCell>{{ item.pcs ?? 0 }}</TableDataCell>
                                 <TableDataCell>{{ item.amount * item.pcs }}</TableDataCell>
@@ -102,7 +119,8 @@ export default {
     },
     props: {
         collection: Object,
-        order_details: Array,Link // This will receive the data directly from the backend
+        order_details: Array,Link, // This will receive the data directly from the backend
+        collection_details : Object
     },
     methods: {
         formatMoney,
@@ -129,6 +147,9 @@ export default {
             });
         }
     },
+    mounted(){
+        console.log(this.collection_details)
+    }
 };
 </script>
 
