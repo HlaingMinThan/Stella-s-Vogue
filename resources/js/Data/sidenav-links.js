@@ -16,6 +16,14 @@ export default function getSideNavLinks() {
             url: "/admin/collections",
             allowedRoles: ["admin"],
         },
+        {
+            icon: "fa-inbox",
+            path: route("admin.inventories.index"),
+            title: "Manage Inventories",
+            component: "Admin/Inventories/Index",
+            url: "/admin/inventories",
+            allowedRoles: ["admin"],
+        },
         // {
         //     icon: 'fa-users',
         //     path: route('admin.orders.index'),

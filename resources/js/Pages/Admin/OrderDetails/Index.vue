@@ -2,29 +2,36 @@
     <div class="min-h-screen py-3 space-y-8">
         <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold ">Remaining Stocks({{collection.name}})</h1>
-        <InertiaLinkButton :href="route('admin.refill.update',{ collection:collection.id })" class="w-full md:w-auto bg-primary text-white">
+        
+    </div>
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-3">
+            <div class="flex mb-2 flex-col gap-2  text-white rounded-lg  items-center " v-for="collectionDetail in collection_details">
+                <div class="bg-white w-full shadow-lg rounded-lg p-5">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-xl font-bold text-gray-800 capitalize">Color: {{collectionDetail.color}}</div>
+                    <div class="text-md text-gray-600 capitalize">Size: {{ collectionDetail.size }}</div>
+                </div>
+                <div class="flex flex-col items-center">
+                <p class="text-bold "
+                :class="[collectionDetail.in_stock == 0 ? 'text-red-500' : 'text-green-500']"
+                >{{ collectionDetail.in_stock }}</p>
+                <div class=" font-semibold"
+                :class="[collectionDetail.in_stock == 0 ? 'text-red-500' : 'text-green-500']"
+                >
+                    {{ collectionDetail.in_stock == 0 ? 'Out of Stock' : 'In Stock' }}
+                </div>
+            </div>
+            </div>
+        </div>
+            </div>
+        </div>
+        <div  class="min-w-[270px] md:flex gap-3 items-center justify-end">
+            <InertiaLinkButton :href="route('admin.refill.update',{ collection:collection.id })" class="w-full md:w-[150px]  bg-primary text-white">
                 <i class="fa-solid fa-file-circle-plus mr-1"></i>
                 Refill
             </InertiaLinkButton>
-    </div>
-        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-3">
-            <div class="flex mb-2 flex-col gap-2 px-5 py-4 text-white rounded-lg bg-primary items-center " v-for="collectionDetail in collection_details">
-                <div class="flex items-center w-[80%] justify-between gap-4">
-                    <p class="">{{ collectionDetail.color }} / {{ collectionDetail.size }}</p>
-                    <p> {{ collectionDetail.in_stock }}</p>
-                </div>
-                <!-- <div class="flex items-center  w-[80%] gap-4">
-                    <p class=" shrink-0 w-[60%] font-bold">Size -</p>
-                    <p>{{ collectionDetail.size }}</p>
-                </div>
-                <div class="flex items-center  w-[80%] gap-4">
-                    <p class=" shrink-0 font-bold w-[60%]">In stock -</p>
-                    <p>{{ collectionDetail.in_stock }} <span class='text-sm'>items</span></p>
-                </div> -->
-            </div>
-        </div>
-        <div  class="min-w-[270px] md:flex items-center justify-end">
-            <InertiaLinkButton :href="route('admin.order_details.create',{ collection:collection.id })" class="w-full md:w-auto bg-primary text-white">
+            <InertiaLinkButton :href="route('admin.order_details.create',{ collection:collection.id })" class="w-full md:w-[150px]  bg-primary text-white">
                 <i class="fa-solid fa-file-circle-plus mr-1"></i>
                 Create
             </InertiaLinkButton>

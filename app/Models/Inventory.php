@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Inventory extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+    ];
+
+    public function collectionDetail()
+    {
+        return $this->belongsTo(CollectionDetail::class);
+    }
 }

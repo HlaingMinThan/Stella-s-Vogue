@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
@@ -12,6 +13,8 @@ use App\Http\Middleware\MustBeAuthUser;
 use App\Http\Middleware\MustBeGuestUser;
 use App\Http\Middleware\MustBeStaffUser;
 use Illuminate\Support\Facades\Route;
+
+use function Pest\Laravel\put;
 
 Route::get('/', function () {
     return redirect('/admin/login');
@@ -62,6 +65,10 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('/collection/{collection}/refill', [RefillController::class, 'index'])->name('refill.index');
         Route::put('/collection/{collection}/refill', [RefillController::class, 'update'])->name('refill.update');
 
+        Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
+        Route::get('/inventories/{inventory}/edit', [InventoryController::class, 'edit'])->name('inventories.edit');
+        Route::put('/inventories/{inventory}/update', [InventoryController::class, 'update'])->name('inventories.update');
+        Route::delete('/inventories/{inventory}/destroy', [InventoryController::class, 'destroy'])->name('inventories.destroy');
         Route::post('logout', [LogoutController::class, 'destroy'])
             ->name('logout');
     });

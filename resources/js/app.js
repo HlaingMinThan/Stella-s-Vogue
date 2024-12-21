@@ -7,6 +7,7 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import AdminLayout from './Layouts/AdminLayout.vue';
 import store from './store';
+import formatDate from './Helpers/formatDate';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -33,6 +34,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(store)
+            .provide('$formatDate', formatDate)
             .use(ZiggyVue)
             .mount(el);
     },

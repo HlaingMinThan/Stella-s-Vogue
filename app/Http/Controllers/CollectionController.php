@@ -6,13 +6,15 @@ use App\Models\Collection;
 use App\Models\CollectionDetail;
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CollectionController extends Controller
 {
     public function index()
     {
         return inertia("Admin/Collections/Index", [
-            'collections' => Collection::where('name', 'like', '%' . request('search') . '%')
+            'collections' => Collection::with('collectionDetails')
+                ->where('name', 'like', '%' . request('search') . '%')
                 ->orderBy("updated_at", 'desc')
                 ->paginate(10)
                 ->through(fn($collection) => [
@@ -32,6 +34,7 @@ class CollectionController extends Controller
                     'taxi_charges' => $collection->taxi_charges,
                     'stock' => $collection->stock,
                     'sum' => $collection->sum, // Access the virtual property
+                    'collection_details' => $collection->collectionDetails,
                     'deletable' => !$collection->collectionDetails()->whereHas('orderDetails')->exists(),
                 ]),
         ]);
@@ -132,35 +135,48 @@ class CollectionController extends Controller
             'collection_details.*.stock.value.integer' => 'Stock must be an integer.',
         ]);
 
-        foreach ($validatedData['collection_details'] as $collectionDetail) {
-            if (key_exists('id', $collectionDetail)) {
-                $existCollectionDetail = CollectionDetail::where('id', $collectionDetail['id'])->first();
-                $existCollectionDetail->update([
-                    'color' => $collectionDetail['color']['value'],
-                    'size' => $collectionDetail['size']['value'],
-                    'price' => $collectionDetail['price']['value'],
-                    'total_stock' => $collectionDetail['stock']['value'],
-                    'in_stock' => ($collectionDetail['stock']['value'] - $existCollectionDetail->total_stock) + $existCollectionDetail->in_stock
+        try {
+            DB::transaction(function () use ($validatedData, $collection) {
+                foreach ($validatedData['collection_details'] as $collectionDetail) {
+                    if (key_exists('id', $collectionDetail)) {
+                        $existCollectionDetail = CollectionDetail::where('id', $collectionDetail['id'])->first();
+                        if (($collectionDetail['stock']['value'] - $existCollectionDetail->total_stock) + $existCollectionDetail->in_stock < 0) {
+                            throw new \Exception('You already sold ' . ($existCollectionDetail->total_stock - $existCollectionDetail->in_stock) . ' items of ' . $collection->name . ' with size ' . $existCollectionDetail->size . ' and color ' . $existCollectionDetail->color);
+                        }
+                        $existCollectionDetail->update([
+                            'color' => $collectionDetail['color']['value'],
+                            'size' => $collectionDetail['size']['value'],
+                            'price' => $collectionDetail['price']['value'],
+                            'total_stock' => $collectionDetail['stock']['value'],
+                            'in_stock' => ($collectionDetail['stock']['value'] - $existCollectionDetail->total_stock) + $existCollectionDetail->in_stock
+                        ]);
+                    } else {
+                        $collection_detail = CollectionDetail::create([
+                            'collection_id' => $collection->id,
+                            'color' => $collectionDetail['color']['value'],
+                            'size' => $collectionDetail['size']['value'],
+                            'price' => $collectionDetail['price']['value'],
+                            'total_stock' => $collectionDetail['stock']['value'],
+                            'in_stock' => $collectionDetail['stock']['value']
+                        ]);
+                        Inventory::create([
+                            'collection_detail_id' => $collection_detail->id,
+                            'stocks' => $collection_detail->total_stock
+                        ]);
+                    }
+                }
+
+                // Update the collection with validated data
+                $collection->update([
+                    'name' => $validatedData['collection_name']
                 ]);
-            } else {
-                CollectionDetail::create([
-                    'collection_id' => $collection->id,
-                    'color' => $collectionDetail['color']['value'],
-                    'size' => $collectionDetail['size']['value'],
-                    'price' => $collectionDetail['price']['value'],
-                    'total_stock' => $collectionDetail['stock']['value'],
-                    'in_stock' => $collectionDetail['stock']['value']
-                ]);
-            }
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
 
-        // Update the collection with validated data
-        $collection->update([
-            'name' => $validatedData['collection_name']
-        ]);
-
         // Redirect back with a success message
-        return redirect()->route('admin.order_details.index', ['collection' => $collection->id])->with('success', 'Collection updated successfully!');
+        return redirect()->route('admin.collections.index', ['collection' => $collection->id])->with('success', 'Collection updated successfully!');
     }
 
     public function destroy(Collection $collection)

@@ -22,6 +22,8 @@ class OrderDetailController extends Controller
                     $query->where('name', 'like', '%' . $searchTerm . '%');
                 })
                 ->with(['collectionDetail', 'order'])
+                ->orderBy('created_at', 'desc')
+                ->orderBy('updated_at', 'desc')
                 ->paginate(15),
             'collection' => $collection,
             'collection_details' => $collection->collectionDetails
@@ -122,6 +124,6 @@ class OrderDetailController extends Controller
         $orderDetail->order->delete();
         $orderDetail->delete();
 
-        return to_route('admin.order_details.index', ['collection' => $orderDetail->collection->id])->with('error', 'Order deleted successfully!');
+        return to_route('admin.order_details.index', ['collection' => $orderDetail->collectionDetail->collection->id])->with('error', 'Order deleted successfully!');
     }
 }
