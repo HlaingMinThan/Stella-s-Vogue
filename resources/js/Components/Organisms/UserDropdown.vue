@@ -81,6 +81,7 @@ const dropdownItems = computed(() => {
 });
 
 const handleLogout=()=>{
+    store.commit('toggleSideNav',false);
     emitter.emit('open-confirmation-dialog', {
         title:'Account Logout',
         body:'Are you sure you would like to do this ?',
@@ -90,12 +91,9 @@ const handleLogout=()=>{
         svgIcon: 'question',
         allowClickOutside:true,
         onConfirm: () => {
-            localStorage.setItem('region',user.value?.country);
-            store.commit('nationality',user.value?.country);
-            router.post(route('logout'),{},{
+            router.post(route('admin.logout'),{},{
                 onFinish:()=>{
                     emitter.emit('close-confirmation-dialog');
-                    store.commit('clearCartItems');
                 }
             });
         },
