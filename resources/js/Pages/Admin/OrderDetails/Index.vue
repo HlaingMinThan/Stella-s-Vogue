@@ -56,7 +56,7 @@
                                 <TableHeaderCell label="ID" />
                                 <TableHeaderCell label="Name" />
                                 <TableHeaderCell label="Color" />
-                                <TableHeaderCell label="Price Per roduct" />
+                                <TableHeaderCell label="Price Per Product" />
                                 <TableHeaderCell label="Pcs" />
                                 <TableHeaderCell label="Total Price" />
                                 <TableHeaderCell label="Actions" />
@@ -66,9 +66,9 @@
                                 <TableDataCell>{{ item.id }}</TableDataCell>
                                 <TableDataCell>{{ item.order.name }}</TableDataCell>
                                 <TableDataCell>{{ item.collection_detail.color }}/ {{ item.collection_detail.size }}</TableDataCell>
-                                <TableDataCell>{{ item.amount }}</TableDataCell>
+                                <TableDataCell>{{ item.amount / item.pcs }} MMK</TableDataCell>
                                 <TableDataCell>{{ item.pcs ?? 0 }}</TableDataCell>
-                                <TableDataCell>{{ item.amount * item.pcs }}</TableDataCell>
+                                <TableDataCell>{{ item.amount  }} MMK</TableDataCell>
                                 <TableActionCell>
                                     <InertiaLinkButton
                                         :preserve-scroll="false"
