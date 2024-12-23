@@ -27,11 +27,11 @@
             </div>
         </div>
         <div  class="min-w-[270px] md:flex gap-3 items-center justify-end">
-            <InertiaLinkButton :href="route('admin.refill.update',{ collection:collection.id })" class="w-full md:w-[150px]  bg-primary text-white">
+            <InertiaLinkButton v-if="user.role.slug == 'admin' || user.role.slug == 'stock'" :href="route('admin.refill.update',{ collection:collection.id })" class="w-full md:w-[150px]  bg-primary text-white">
                 <i class="fa-solid fa-file-circle-plus mr-1"></i>
                 Refill
             </InertiaLinkButton>
-            <InertiaLinkButton :href="route('admin.order_details.create',{ collection:collection.id })" class="w-full md:w-[150px]  bg-primary text-white">
+            <InertiaLinkButton v-if="user.role.slug == 'admin' || user.role.slug == 'staff'" :href="route('admin.order_details.create',{ collection:collection.id })" class="w-full md:w-[150px]  bg-primary text-white">
                 <i class="fa-solid fa-file-circle-plus mr-1"></i>
                 Create
             </InertiaLinkButton>
@@ -59,7 +59,7 @@
                                 <TableHeaderCell label="Price Per Product" />
                                 <TableHeaderCell label="Pcs" />
                                 <TableHeaderCell label="Total Price" />
-                                <TableHeaderCell label="Actions" />
+                                <TableHeaderCell v-if="user.role.slug !== 'staff'" label="Actions" />
                             </template>
 
                             <template #table-data="{ item }">
@@ -69,7 +69,7 @@
                                 <TableDataCell>{{ item.amount / item.pcs }} MMK</TableDataCell>
                                 <TableDataCell>{{ item.pcs ?? 0 }}</TableDataCell>
                                 <TableDataCell>{{ item.amount  }} MMK</TableDataCell>
-                                <TableActionCell>
+                                <TableActionCell v-if="user.role.slug !== 'staff'">
                                     <InertiaLinkButton
                                         :preserve-scroll="false"
                                         :href="route('admin.order_details.edit', { orderDetail: item?.id })"
@@ -109,7 +109,7 @@ import TableActionCell from '@/Components/Molecules/TableActionCell.vue';
 import NormalButton from '@/Components/Atoms/NormalButton.vue';
 import formatMoney from '@/Helpers/formatMoney';
 import { emitter } from '@/Helpers/emitter';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 export default {
     components: {
@@ -128,6 +128,11 @@ export default {
         collection: Object,
         order_details: Array,Link, // This will receive the data directly from the backend
         collection_details : Object
+    },
+    computed:{
+        user(){
+            return usePage().props.auth.user
+        }
     },
     methods: {
         formatMoney,

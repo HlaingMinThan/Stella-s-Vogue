@@ -32,10 +32,12 @@ class RefillController extends Controller
                 'in_stock' => $collection_detail->in_stock + $collectionDetail['refill']['value'],
                 'total_stock' => $collection_detail->total_stock + $collectionDetail['refill']['value']
             ]);
-            Inventory::create([
-                'collection_detail_id' => $collection_detail->id,
-                'stocks' => $collectionDetail['refill']['value']
-            ]);
+            if ($collectionDetail['refill']['value']) {
+                Inventory::create([
+                    'collection_detail_id' => $collection_detail->id,
+                    'stocks' => $collectionDetail['refill']['value']
+                ]);
+            }
         }
 
         return redirect()->route('admin.collections.index')->with('success', 'Collection refilled successfully!');

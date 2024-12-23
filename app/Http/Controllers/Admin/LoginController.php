@@ -30,7 +30,7 @@ class LoginController extends Controller
                 if (Auth::user()->isAdmin()) {
                     return to_route('admin.collections.index');
                 }
-                return to_route('admin.orders.index');
+                return to_route('admin.collections.index');
             } else {
                 return back()->withErrors([
                     'password' => 'The provided password is incorrect.',

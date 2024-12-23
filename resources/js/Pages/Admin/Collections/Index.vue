@@ -8,7 +8,7 @@
 
             <!-- Create Button -->
             <div class="min-w-[270px] md:flex items-center justify-end">
-                <InertiaLinkButton :href="route('admin.collections.create')" class="w-full md:w-auto bg-primary text-white">
+                <InertiaLinkButton v-if="user.role.slug == 'admin'" :href="route('admin.collections.create')" class="w-full md:w-auto bg-primary text-white">
                     <i class="fa-solid fa-file-circle-plus mr-1"></i>
                     Create
                 </InertiaLinkButton>
@@ -65,7 +65,7 @@
                                 <TableDataCell><span class="font-bold">{{ formatMoney(item.sum) }} MMK</span></TableDataCell> -->
                                 <TableActionCell>
                                     <InertiaLinkButton
-                                    v-if="item.collection_details?.length > 0"
+                                    v-if="item.collection_details?.length > 0 && (user.role.slug == 'admin' || user.role.slug == 'stock')"
                                         :preserve-scroll="false"
                                         :href="route('admin.refill.index', { collection: item?.id })"
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
@@ -74,7 +74,7 @@
                                         Refill
                                     </InertiaLinkButton>
                                     <InertiaLinkButton
-
+                                        v-if="user.role.slug == 'admin'"
                                         :preserve-scroll="false"
                                         :href="route('admin.collections.edit', { collection: item?.id })"
                                         class="bg-blue-600 hover:bg-blue-700 text-white !text-xs !font-semibold"
@@ -83,7 +83,7 @@
                                         Edit
                                     </InertiaLinkButton>
                                     <NormalButton
-                                        v-if="item.deletable"
+                                        v-if="item.deletable && user.role.slug == 'admin'"
                                         type="button"
                                         @click="
                                             destroy(
@@ -127,7 +127,7 @@ import TableActionCell from '@/Components/Molecules/TableActionCell.vue';
 import NormalButton from '@/Components/Atoms/NormalButton.vue';
 import formatMoney from '@/Helpers/formatMoney';
 import { emitter } from '@/Helpers/emitter';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 export default {
     components: {
@@ -144,6 +144,11 @@ export default {
     },
     props: {
         collections: Array,Link // This will receive the data directly from the backend
+    },
+    computed:{
+        user(){
+            return usePage().props.auth.user
+        }
     },
     methods: {
         formatMoney,
@@ -166,9 +171,6 @@ export default {
                 },
             });
         }
-    },
-    mounted() {
-        console.log(this.collections)
     },
 };
 </script>

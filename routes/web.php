@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\RefillController;
 use App\Http\Controllers\ReportController;
 use App\Http\Middleware\MustBeAdminMiddleware;
+use App\Http\Middleware\MustBeAdminOrStockUser;
 use App\Http\Middleware\MustBeAuthUser;
 use App\Http\Middleware\MustBeGuestUser;
 use App\Http\Middleware\MustBeStaffUser;
@@ -37,7 +38,7 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('/dashboard', [ReportController::class, 'index'])->name('dashboard')->middleware(MustBeAdminMiddleware::class);
 
         // collections
-        Route::get('collections', [CollectionController::class, 'index'])->name('collections.index')->middleware(MustBeAdminMiddleware::class);
+        Route::get('collections', [CollectionController::class, 'index'])->name('collections.index');
         Route::get('collections/create', [CollectionController::class, 'create'])->name('collections.create')->middleware(MustBeAdminMiddleware::class);
         Route::post('collections/store', [CollectionController::class, 'store'])->name('collections.store')->middleware(MustBeAdminMiddleware::class);
         Route::get('collections/{collection}/edit', [CollectionController::class, 'edit'])->name('collections.edit')->middleware(MustBeAdminMiddleware::class);
@@ -55,20 +56,20 @@ Route::middleware(MustBeAuthUser::class)
         Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
 
         // order details
-        Route::get('/collections/{collection}/order_details', [OrderDetailController::class, 'index'])->name('order_details.index')->middleware([MustBeStaffUser::class]);
+        Route::get('/collections/{collection}/order_details', [OrderDetailController::class, 'index'])->name('order_details.index');
         Route::get('/collections/{collection}/order_details/create', [OrderDetailController::class, 'create'])->name('order_details.create')->middleware([MustBeStaffUser::class]);
         Route::post('/collections/{collection}/order_details/store', [OrderDetailController::class, 'store'])->name('order_details.store')->middleware([MustBeStaffUser::class]);
-        Route::get('order_details/{orderDetail}/edit', [OrderDetailController::class, 'edit'])->name('order_details.edit')->middleware([MustBeStaffUser::class]);
-        Route::post('order_details/{orderDetail}/update', [OrderDetailController::class, 'update'])->name('order_details.update')->middleware([MustBeStaffUser::class]);
-        Route::delete('order_details/{orderDetail}/delete', [OrderDetailController::class, 'destroy'])->name('order_details.destroy')->middleware([MustBeStaffUser::class]);
+        Route::get('order_details/{orderDetail}/edit', [OrderDetailController::class, 'edit'])->name('order_details.edit')->middleware([MustBeAdminOrStockUser::class]);
+        Route::post('order_details/{orderDetail}/update', [OrderDetailController::class, 'update'])->name('order_details.update')->middleware([MustBeAdminOrStockUser::class]);
+        Route::delete('order_details/{orderDetail}/delete', [OrderDetailController::class, 'destroy'])->name('order_details.destroy')->middleware([MustBeAdminOrStockUser::class]);
 
-        Route::get('/collection/{collection}/refill', [RefillController::class, 'index'])->name('refill.index');
-        Route::put('/collection/{collection}/refill', [RefillController::class, 'update'])->name('refill.update');
+        Route::get('/collection/{collection}/refill', [RefillController::class, 'index'])->name('refill.index')->middleware([MustBeAdminOrStockUser::class]);
+        Route::put('/collection/{collection}/refill', [RefillController::class, 'update'])->name('refill.update')->middleware([MustBeAdminOrStockUser::class]);
 
-        Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
-        Route::get('/inventories/{inventory}/edit', [InventoryController::class, 'edit'])->name('inventories.edit');
-        Route::put('/inventories/{inventory}/update', [InventoryController::class, 'update'])->name('inventories.update');
-        Route::delete('/inventories/{inventory}/destroy', [InventoryController::class, 'destroy'])->name('inventories.destroy');
+        Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index')->middleware([MustBeAdminOrStockUser::class]);
+        Route::get('/inventories/{inventory}/edit', [InventoryController::class, 'edit'])->name('inventories.edit')->middleware([MustBeAdminOrStockUser::class]);
+        Route::put('/inventories/{inventory}/update', [InventoryController::class, 'update'])->name('inventories.update')->middleware([MustBeAdminOrStockUser::class]);
+        Route::delete('/inventories/{inventory}/destroy', [InventoryController::class, 'destroy'])->name('inventories.destroy')->middleware([MustBeAdminOrStockUser::class]);
         Route::post('logout', [LogoutController::class, 'destroy'])
             ->name('logout');
     });

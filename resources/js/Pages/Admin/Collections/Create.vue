@@ -5,18 +5,18 @@
                 <BreadcrumbItem label="Create" />
             </Breadcrumb>
         </div>
-        <CollectionForm />
+        <CollectionCreateForm />
     </div>
 </template>
 
 <script>
-import CollectionForm from './components/CollectionForm.vue';
 import Breadcrumb from '@/Components/Molecules/Breadcrumb.vue';
 import BreadcrumbItem from '@/Components/Atoms/BreadcrumbItem.vue';
+import CollectionCreateForm from './components/CollectionCreateForm.vue';
 
 export default {
     components: {
-        CollectionForm,
+        CollectionCreateForm,
         Breadcrumb,
         BreadcrumbItem,
     },

@@ -26,6 +26,11 @@ class DatabaseSeeder extends Seeder
             'slug' => 'staff',
         ]);
 
+        $stock = Role::create([
+            'name' => 'Stock',
+            'slug' => 'stock'
+        ]);
+
         User::factory()->create([
             'name' => 'Stella',
             'email' => 'admin@gmail.com',
@@ -35,6 +40,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'Staff',
             'email' => 'staff@gmail.com',
             'role_id' => $staff->id
+        ]);
+
+        User::factory()->create([
+            'name' => 'stock',
+            'email' => 'stock@gmail.com',
+            'role_id' => $stock->id
         ]);
 
         $royal = Delivery::create([

@@ -15,7 +15,6 @@ class OrderController extends Controller
 {
     public function index()
     {
-        dd('hit');
 
         request()->validate([
             'collection_id' => 'nullable|exists:collections,id',

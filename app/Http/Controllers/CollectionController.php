@@ -58,19 +58,10 @@ class CollectionController extends Controller
             'collection_name' => ['required'],
             'collection_details' => ['required', 'array'], // Ensure `collection_details` is an array
             'collection_details.*.color.value' => ['required', 'string'], // Validate `value` under `color`
-            'collection_details.*.price.value' => ['required', 'string'], // Validate `value` under `color`
-            'collection_details.*.size.value' => ['required', 'string'], // Validate `value` under `size`
-            'collection_details.*.stock.value' => ['required', 'integer'], // Validate `value` under `stock`
         ], [
             'collection_name.required' => 'The collection name is required.',
             'collection_details.required' => 'Collection details are required.',
             'collection_details.*.color.value.required' => 'Color is required for each collection detail.',
-            'collection_details.*.color.value.string' => 'Color must be a string.',
-            'collection_details.*.price.value.required' => 'Price is required for each collection detail.',
-            'collection_details.*.size.value.required' => 'Size is required for each collection detail.',
-            'collection_details.*.size.value.string' => 'Size must be a string.',
-            'collection_details.*.stock.value.required' => 'Stock is required for each collection detail.',
-            'collection_details.*.stock.value.integer' => 'Stock must be an integer.',
         ]);
 
         // Create the collection
@@ -79,18 +70,16 @@ class CollectionController extends Controller
         ]);
 
         foreach ($validatedData['collection_details'] as $collection_detail) {
-            $collectionDetail = CollectionDetail::create([
-                'collection_id' => $collection->id,
-                'color' => $collection_detail['color']['value'],
-                'size' => $collection_detail['size']['value'],
-                'price' => $collection_detail['price']['value'],
-                'total_stock' => $collection_detail['stock']['value'],
-                'in_stock' => $collection_detail['stock']['value'],
-            ]);
-            Inventory::create([
-                'collection_detail_id' => $collectionDetail->id,
-                'stocks' => $collectionDetail->total_stock
-            ]);
+            foreach (['sm', 'md', 'lg'] as $size) {
+                $collectionDetail = CollectionDetail::create([
+                    'collection_id' => $collection->id,
+                    'color' => $collection_detail['color']['value'],
+                    'size' => $size,
+                    'price' => 0,
+                    'total_stock' => 0,
+                    'in_stock' => 0,
+                ]);
+            }
         }
         // Redirect back or to a specific route with success message
         return redirect()->route('admin.collections.index')->with('success', 'Collection created successfully!');
@@ -136,12 +125,20 @@ class CollectionController extends Controller
         ]);
 
         try {
+            $updatedIds = [];
             DB::transaction(function () use ($validatedData, $collection) {
                 foreach ($validatedData['collection_details'] as $collectionDetail) {
                     if (key_exists('id', $collectionDetail)) {
                         $existCollectionDetail = CollectionDetail::where('id', $collectionDetail['id'])->first();
                         if (($collectionDetail['stock']['value'] - $existCollectionDetail->total_stock) + $existCollectionDetail->in_stock < 0) {
                             throw new \Exception('You already sold ' . ($existCollectionDetail->total_stock - $existCollectionDetail->in_stock) . ' items of ' . $collection->name . ' with size ' . $existCollectionDetail->size . ' and color ' . $existCollectionDetail->color);
+                        }
+
+                        if ($existCollectionDetail->total_stock == 0 && $collectionDetail['stock']['value']) {
+                            Inventory::create([
+                                'collection_detail_id' => $existCollectionDetail->id,
+                                'stocks' => $collectionDetail['stock']['value']
+                            ]);
                         }
                         $existCollectionDetail->update([
                             'color' => $collectionDetail['color']['value'],
@@ -150,6 +147,7 @@ class CollectionController extends Controller
                             'total_stock' => $collectionDetail['stock']['value'],
                             'in_stock' => ($collectionDetail['stock']['value'] - $existCollectionDetail->total_stock) + $existCollectionDetail->in_stock
                         ]);
+                        $updatedIds[] = $existCollectionDetail->id;
                     } else {
                         $collection_detail = CollectionDetail::create([
                             'collection_id' => $collection->id,
@@ -159,12 +157,15 @@ class CollectionController extends Controller
                             'total_stock' => $collectionDetail['stock']['value'],
                             'in_stock' => $collectionDetail['stock']['value']
                         ]);
+                        $updatedIds[] = $collection_detail->id;
                         Inventory::create([
                             'collection_detail_id' => $collection_detail->id,
                             'stocks' => $collection_detail->total_stock
                         ]);
                     }
                 }
+
+                CollectionDetail::where('collection_id', $collection->id)->whereNotIn('id', $updatedIds)->delete();
 
                 // Update the collection with validated data
                 $collection->update([

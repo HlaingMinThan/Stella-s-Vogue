@@ -14,7 +14,7 @@ export default function getSideNavLinks() {
             title: "Manage Collections",
             component: "Admin/Collections/Index",
             url: "/admin/collections",
-            allowedRoles: ["admin"],
+            allowedRoles: ["admin","staff","stock"],
         },
         {
             icon: "fa-inbox",
