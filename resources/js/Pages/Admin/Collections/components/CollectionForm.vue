@@ -84,14 +84,14 @@ export default {
                 // extra_charges: { label: 'Extra Charges', type: 'number', required: true },
                 // taxi_charges: { label: 'Taxi Charges', type: 'number', required: true },
                 // ga__vlog_charges: { label: 'GA/Vlog Charges', type: 'number', required: true },
-                stock: { label: 'Stock', type: 'number', required: true },
+                stock: { label: 'Stock', type: 'tel', required: true },
             },
             collection_name : '',
             collection_details : [{
                 color : {label : 'Color', type : 'text',required : true , value : ''},
                 size : {label : 'Size', type : 'text',required : true,value :''},
                 price : {label : 'Price', type : 'text',required : true,value : ''},
-                stock: { label: this.isEditMode ? 'Total Stock(Refill Included)' : 'Total Stock', type: 'number', required: true,value : '' },
+                stock: { label: this.isEditMode ? 'Total Stock(Refill Included)' : 'Total Stock', type: 'tel', required: true,value : '' },
             }],
             duplicateError : null,
             duplicates : [],
@@ -115,7 +115,7 @@ export default {
                 color : {label : 'Color', type : 'text',required : false ,value : ''},
                 size : {label : 'Size', type : 'text',required : true ,value : ''},
                 price : {label : 'Price', type : 'text',required : true ,value : ''},
-                stock: { label: this.isEditMode ? 'Total Stock(Refill included)' : 'Total Stock', type: 'number', required: true ,value : ''},
+                stock: { label: this.isEditMode ? 'Total Stock(Refill included)' : 'Total Stock', type: 'tel', required: true ,value : ''},
             }
             this.collection_details = [...this.collection_details,collectionDetailField]
         },
@@ -151,7 +151,7 @@ export default {
                     color : {label : 'Color', type : 'text',required : true ,value : collectionDetail.color},
                     size : {label : 'Size', type : 'text',required : true ,value : collectionDetail.size},
                     price : {label : 'Price', type : 'text',required : true ,value : collectionDetail.price},
-                    stock: { label: this.isEditMode ? 'Total Stock(Refill included)' : 'Total Stock', type: 'number', required: true ,value : collectionDetail.total_stock},
+                    stock: { label: this.isEditMode ? 'Total Stock(Refill included)' : 'Total Stock', type: 'tel', required: true ,value : collectionDetail.total_stock},
                 }
             });
         }

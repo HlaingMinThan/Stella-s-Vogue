@@ -37,7 +37,7 @@
             >
             <input
               v-model="form.pcs"
-              type="text"
+              type="tel"
               id="pcs"
               class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
             />

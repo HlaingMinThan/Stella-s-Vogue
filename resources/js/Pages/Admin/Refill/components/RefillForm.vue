@@ -65,7 +65,7 @@ export default {
                     color : {label : 'Color', type : 'text',required : true ,value : collectionDetail.color,disabled : true},
                     size : {label : 'Size', type : 'text',required : true ,value : collectionDetail.size,disabled : true},
                     price : {label : 'Price', type : 'text',required : true ,value : collectionDetail.price,disabled : true},
-                    refill: { label: 'Refill Stock', type: 'number', required: true ,value : 0,disabled : false},
+                    refill: { label: 'Refill Stock', type: 'tel', required: true ,value : 0,disabled : false},
                 }
             });
             console.log(this.collection_details);
