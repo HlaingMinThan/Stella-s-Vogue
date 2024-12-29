@@ -42,11 +42,8 @@ class OrderController extends Controller
                 ->where(function ($q) {
                     $q->where('name', 'like', '%' . request('search') . '%')
                         ->orWhere('phone', 'like', '%' . request('search') . '%')
-                        ->orWhere('address', 'like', '%' . request('search') . '%')
-                        // Join with order_details table for color filtering
-                        ->orWhereHas('orderDetails', function ($query) {
-                            $query->where('color', 'like', '%' . request('search') . '%');
-                        });
+                        ->orWhere('address', 'like', '%' . request('search') . '%');
+                    // Join with order_details table for color filtering
                 })
                 ->when($formattedDate, function ($q) use ($formattedDate) {
                     return $q->whereDate('created_at', $formattedDate);

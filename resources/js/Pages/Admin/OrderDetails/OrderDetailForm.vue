@@ -48,7 +48,8 @@
         <div class="mt-6">
           <button
             type="submit"
-            class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            :disabled="isLoading"
+            class="inline-flex justify-center disabled:cursor-not-allowed px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
           >
             Update Order
           </button>
@@ -93,6 +94,7 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
           collection_detail_id : this.initialForm?.collection_detail_id,
           pcs: this.initialForm?.pcs,
         }),
+        isLoading : false
       };
     },
     computed:{ 
@@ -103,6 +105,7 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
     methods: {
       async submitForm() {
         this.form.clearErrors();
+        this.isLoading = true;
         //upload screenshot left
         const routeName = this.isEditMode
           ? "admin.order_details.update"
@@ -112,7 +115,14 @@ import InertiaLinkButton from "@/Components/Atoms/InertiaLinkButton.vue";
             orderDetail: this.isEditMode ? this.initialForm?.id : null,
             collection: this.collection.id
           })
-        );
+        ,{
+          onSuccess : () => {
+            this.isLoading  = false
+          },
+          onError : () => {
+            this.isLoading = false
+          }
+        });
       },
       handleAddCollection(){
         this.form.collections.push({

@@ -202,7 +202,8 @@
       <div class="mt-6">
         <button
           type="submit"
-          class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+          :disabled="isLoading"
+          class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
         >
           {{ isEditMode ? "Update Order" : "Create Order" }}
         </button>
@@ -270,10 +271,12 @@ export default {
           notes : ''
         }]
       }),
+      isLoading : false,
     };
   },
   methods: {
     async submitForm() {
+      this.isLoading = true;
       this.form.clearErrors();
       //upload screenshot left
       const routeName = this.isEditMode
@@ -283,7 +286,14 @@ export default {
         route(routeName, {
           order: this.isEditMode ? this.initialForm.id : null,
         })
-      );
+      ,{
+        onSuccess : () => {
+          this.isLoading = false;
+        },
+        onError : () => {
+          this.isLoading = false
+        }
+      });
     },
     handleAddCollection(){
       this.form.collections.push({

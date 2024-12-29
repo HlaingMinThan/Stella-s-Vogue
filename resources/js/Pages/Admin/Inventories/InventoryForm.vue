@@ -20,7 +20,7 @@
                     </div>
             </div>
             <div class="mt-6">
-                <button type="submit"  class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <button type="submit" :disabled="isLoading"  class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                     {{ isEditMode ? 'Update Inventory' : 'Create Collection' }}
                 </button>
             </div>
@@ -44,14 +44,23 @@ export default {
         return {
             form : this.$inertia.form({
                 stocks : this.inventory?.stocks,
-            })
+            }),
+            isLoading : false,
         };
     },
     methods: {
         submitForm() {
+            this.isLoading = true;
             const routeName = this.isEditMode ? 'admin.inventories.update' : 'admin.inventories.store';
             const method = this.isEditMode ? 'put' : 'post';
-            this.form[method](route(routeName,{inventory : this.inventory.id}))
+            this.form[method](route(routeName,{inventory : this.inventory.id}),{
+                onSuccess : () => {
+                    this.isLoading = false
+                },
+                onError : () => {
+                    this.isLoading = false;
+                }
+            })
         },
         addNewCollectionDetail(){
             let collectionDetailField = {

@@ -30,7 +30,7 @@
                     </div>
             </div>
             <div class="mt-6">
-                <button type="submit"  class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <button type="submit" :disabled="isLoading" class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                     Refill
                 </button>
             </div>
@@ -51,11 +51,20 @@ export default {
     data() {
         return {
             collection_details : [],
+            isLoading : false,
         };
     },
     methods: {
         submitForm() {
-            this.$inertia.put(route('admin.refill.update', { collection: this.collection?.id }), {collection_details : this.collection_details});
+            this.isLoading = true;
+            this.$inertia.put(route('admin.refill.update', { collection: this.collection?.id }), {collection_details : this.collection_details},{
+                onSuccess : () => {
+                    this.isLoading = false
+                },
+                onError : () => {
+                    this.isLoading = false
+                }
+            });
         },
     },
     mounted(){

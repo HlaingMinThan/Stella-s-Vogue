@@ -12,11 +12,16 @@ class InventoryController extends Controller
     public function index()
     {
         $searchTerm = request('search');
+        $inventories = Inventory::with(['collectionDetail.collection'])
+            ->whereHas('collectionDetail.collection', function ($query) use ($searchTerm) {
+                $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate();
+
         return Inertia::render("Admin/Inventories/Index", [
-            'inventories' => Inventory::with(['collectionDetail.collection'])
-                ->orderBy('created_at', 'desc')
-                ->orderBy('updated_at', 'desc')
-                ->paginate(),
+            'inventories' => $inventories,
         ]);
     }
 

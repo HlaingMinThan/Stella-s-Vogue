@@ -37,7 +37,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z"/></svg>
             </div>
             <div class="mt-6">
-                <button type="submit" :disabled="duplicates.length > 0" class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <button type="submit" :disabled="duplicates.length > 0 || isLoading" class="inline-flex disabled:cursor-not-allowed justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                     {{ isEditMode ? 'Update Collection' : 'Create Collection' }}
                 </button>
             </div>
@@ -95,18 +95,23 @@ export default {
             }],
             duplicateError : null,
             duplicates : [],
-            errors : null
+            errors : null,
+            isLoading : false,
         };
     },
     methods: {
         submitForm() {
             if(this.duplicates.length > 0) return;
+            this.isLoading = true;
             const routeName = this.isEditMode ? 'admin.collections.update' : 'admin.collections.store';
             const method = this.isEditMode ? 'put' : 'post';
             this.$inertia[method](route(routeName, { collection: this.collection?.id }), {collection_details : this.collection_details,collection_name : this.collection_name},{
                 onError : (e) => {
                     this.errors = e
-                    console.log(e)
+                    this.isLoading = false
+                },
+                onSuccess : () => {
+                    this.isLoading = false
                 }
             });
         },
