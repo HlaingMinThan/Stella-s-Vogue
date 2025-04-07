@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('collection_id');
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('payment', PaymentOption::all());
+            $table->enum('payment', ['wave', 'kpay', 'aya', 'cb', 'cash', 'other']);
             $table->string('screenshot')->nullable();
             $table->unsignedBigInteger('delivery_id')->nullable();
             $table->text('notes')->nullable();
