@@ -11,12 +11,12 @@
             </Breadcrumb>
 
             <!-- Create Button -->
-            <div class="min-w-[270px] md:flex items-center justify-end">
+            <!-- <div class="min-w-[270px] md:flex items-center justify-end">
                 <InertiaLinkButton :href="route('admin.orders.create')" class="w-full md:w-auto bg-primary text-white">
                     <i class="fa-solid fa-file-circle-plus mr-1"></i>
                     Create
                 </InertiaLinkButton>
-            </div>
+            </div> -->
         </div>
         <!-- Table Start -->
         <div class="relative border border-gray-300 bg-white rounded-md shadow-sm shadow-gray-200 md:px-5 py-3">

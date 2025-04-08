@@ -74,6 +74,10 @@
                                     label="Total Ways"
                                     class="min-w-[120px]"
                                 />
+                                <TableHeaderCell
+                                    label="View Orders"
+                                    class="min-w-[120px]"
+                                />
                             </template>
 
                             <template #table-data="{ item }">
@@ -87,7 +91,20 @@
                                 <TableDataCell>{{
                                     item.total_ways
                                 }}</TableDataCell>
-                                
+                                <TableDataCell>
+                                    <InertiaLinkButton
+                                        :href="
+                                            route('admin.orders.index', {
+                                                date: item.date,
+                                            })
+                                        "
+                                    >
+                                        <i
+                                            class="fa-solid fa-file-circle-plus mr-1"
+                                        ></i>
+                                        view orders
+                                    </InertiaLinkButton>
+                                </TableDataCell>
                             </template>
                         </Table>
                     </div>
