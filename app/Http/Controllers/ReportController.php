@@ -6,7 +6,6 @@ use App\Models\Delivery;
 use App\Models\Order;
 use App\Static\PaymentOption;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
