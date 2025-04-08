@@ -21,7 +21,6 @@ class ReportController extends Controller
             DB::raw('SUM(order_details.amount) as total_order_amount'),  // Sum the amount from order_details
             DB::raw('COUNT(DISTINCT orders.id) as total_ways')  // Count the total number of orders
         )
-            ->join('deliveries', 'orders.delivery_id', '=', 'deliveries.id')  // Join deliveries table
             ->join('order_details', 'orders.id', '=', 'order_details.order_id')  // Join order_details table
             // Apply the month filter if present
             ->when($month, function ($query, $month) {
@@ -32,9 +31,6 @@ class ReportController extends Controller
                 return $query->where('orders.payment', $payment === "all" ? null : $payment);
             })
             // Apply the delivery method filter if present
-            ->when($delivery && $delivery !== "all", function ($query) use ($delivery) {
-                return $query->where('orders.delivery_id', $delivery === "all" ? null : $delivery);
-            })
             ->groupBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"))  // Group by formatted date
             ->orderBy(DB::raw("DATE_FORMAT(orders.created_at, '%d-%m-%y')"), 'DESC')  // Order by formatted date
             ->paginate(10);

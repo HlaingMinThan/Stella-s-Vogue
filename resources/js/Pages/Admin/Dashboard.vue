@@ -35,28 +35,6 @@
                     </div>
                     <div class="w-full">
                         <label
-                            for="payment"
-                            class="block text-sm font-medium text-gray-700 mb-3"
-                            >Deliveries</label
-                        >
-                        <SelectBox
-                            class="w-full bg-white"
-                            v-model="form.delivery_id"
-                            placeholder="Choose payment"
-                            :options="[
-                                { id: 'all', name: 'All' },
-                                ...deliveries,
-                            ]"
-                            :reduce="(delivery) => delivery.id"
-                            :get-option-label="(option) => `${option.name}`"
-                        />
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors?.delivery_id"
-                        />
-                    </div>
-                    <div class="w-full">
-                        <label
                             for="Month & Year Picker"
                             class="block text-sm font-medium text-gray-700 mb-3"
                             >Month & Year Picker</label
@@ -96,10 +74,6 @@
                                     label="Total Ways"
                                     class="min-w-[120px]"
                                 />
-                                <TableHeaderCell
-                                    label="View Orders"
-                                    class="min-w-[120px]"
-                                />
                             </template>
 
                             <template #table-data="{ item }">
@@ -113,20 +87,7 @@
                                 <TableDataCell>{{
                                     item.total_ways
                                 }}</TableDataCell>
-                                <TableDataCell>
-                                    <InertiaLinkButton
-                                        :href="
-                                            route('admin.orders.index', {
-                                                date: item.date,
-                                            })
-                                        "
-                                    >
-                                        <i
-                                            class="fa-solid fa-file-circle-plus mr-1"
-                                        ></i>
-                                        view orders
-                                    </InertiaLinkButton>
-                                </TableDataCell>
+                                
                             </template>
                         </Table>
                     </div>
@@ -147,22 +108,6 @@
                     <p class="text-lg font-semibold">{{
                                         formatMoney(report.total_order_amount)
                                     }} MMK</p>
-                </div>
-                <div>
-                    <div class="flex gap-2 mt-2">
-                        <InertiaLinkButton
-                                        :href="
-                                            route('admin.orders.index', {
-                                                date: report.date,
-                                            })
-                                        "
-                                    >
-                                        <i
-                                            class="fa-solid fa-file-circle-plus mr-1"
-                                        ></i>
-                                        view orders
-                                    </InertiaLinkButton>
-                    </div>
                 </div>
             </div>
             </div>

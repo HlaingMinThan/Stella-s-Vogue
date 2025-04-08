@@ -70,7 +70,7 @@
                                     <img v-if="item.screenshot" :src="item.screenshot" class="w-12 h-12" @click="screenshot = item.screenshot;open=true">
                                     <p v-else>-</p>
                                 </TableDataCell>
-                                <TableDataCell>{{ item.delivery.name }}</TableDataCell>
+                                <TableDataCell>{{ item?.delivery?.name }}</TableDataCell>
                                 <TableDataCell class=" min-w-[200px]"><p class="line-clamp-2">{{ format(new Date(item.created_at),'dd-MM-yy') }}</p></TableDataCell>
                                 <TableActionCell v-if="item.viewable">
                                     <InertiaLinkButton
@@ -146,7 +146,7 @@
                 </div>
                 <div>
                     <h1 class="font-semibold">Delivery</h1>
-                    <p>{{order?.delivery.name}}
+                    <p>{{order?.delivery?.name}}
                     </p>
                 </div>
                 <div>
