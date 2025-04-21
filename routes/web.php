@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\RefillController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReturnListController;
 use App\Http\Middleware\MustBeAdminMiddleware;
 use App\Http\Middleware\MustBeAdminOrStockUser;
 use App\Http\Middleware\MustBeAuthUser;
@@ -54,6 +55,14 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware([MustBeStaffUser::class]);
         Route::post('orders/{order}/update', [OrderController::class, 'update'])->name('orders.update')->middleware([MustBeStaffUser::class]);
         Route::delete('orders/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware(MustBeAdminMiddleware::class);
+
+        //return lists
+        Route::get('/return_list', [ReturnListController::class, 'index'])->name('return_list.index');
+        Route::get('/return_list/create', [ReturnListController::class, 'create'])->name('return_list.create');
+        Route::post('/return_list/store', [ReturnListController::class, 'store'])->name('return_list.store');
+        Route::get('/return_list/{return_list}/edit', [ReturnListController::class, 'edit'])->name('return_list.edit');
+        Route::put('/return_list/{return_list}/update', [ReturnListController::class, 'update'])->name('return_list.update');
+        Route::delete('/return_list/{return_list}/destroy', [ReturnListController::class, 'destroy'])->name('return_list.destroy');
 
         // order details
         Route::get('/collections/{collection}/order_details', [OrderDetailController::class, 'index'])->name('order_details.index');

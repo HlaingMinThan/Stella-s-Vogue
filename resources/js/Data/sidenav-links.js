@@ -14,7 +14,7 @@ export default function getSideNavLinks() {
             title: "Manage Collections",
             component: "Admin/Collections/Index",
             url: "/admin/collections",
-            allowedRoles: ["admin","staff","stock"],
+            allowedRoles: ["admin", "staff", "stock"],
         },
         {
             icon: "fa-inbox",
@@ -22,6 +22,14 @@ export default function getSideNavLinks() {
             title: "Manage Inventories",
             component: "Admin/Inventories/Index",
             url: "/admin/inventories",
+            allowedRoles: ["admin"],
+        },
+        {
+            icon: "fa-inbox",
+            path: route("admin.return_list.index"),
+            title: "Manage Return List",
+            component: "Admin/ReturnList/Index",
+            url: "/admin/return_list",
             allowedRoles: ["admin"],
         },
         // {

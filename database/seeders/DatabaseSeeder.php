@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Collection;
 use App\Models\Delivery;
 use App\Models\Order;
+use App\Models\ReturnList;
 use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -57,7 +58,7 @@ class DatabaseSeeder extends Seeder
             "slug" => 's_o',
         ]);
 
-        // $olivia = Collection::factory()
+        // Collection::factory(10)->create();
         //     ->create([
         //         'name' => 'olivia'
         //     ]);
@@ -176,5 +177,7 @@ class DatabaseSeeder extends Seeder
         //     'amount' => '10000',
         //     'created_at' => '2024-09-02'
         // ]);
+
+        // ReturnList::factory()->count(10)->create();
     }
 }

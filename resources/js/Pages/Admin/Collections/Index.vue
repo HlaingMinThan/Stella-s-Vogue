@@ -87,7 +87,7 @@
                                         type="button"
                                         @click="
                                             destroy(
-                                                'Membership',
+                                                'Collection',
                                                 route('admin.collections.destroy', { collection: item?.id })
                                             )
                                         "

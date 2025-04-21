@@ -30,7 +30,6 @@ class CollectionFactory extends Factory
             'extra_charges' => fake()->numberBetween(100000, 1000000),
             'taxi_charges' => fake()->numberBetween(100000, 1000000),
             'ga__vlog_charges' => fake()->numberBetween(100000, 1000000),
-            'stock' => fake()->numberBetween(1, 10),
         ];
     }
 }
