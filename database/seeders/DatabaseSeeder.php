@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Collection;
 use App\Models\Delivery;
 use App\Models\Order;
+use App\Models\Reject;
 use App\Models\ReturnList;
 use App\Models\Role;
 use App\Models\User;
@@ -58,7 +59,7 @@ class DatabaseSeeder extends Seeder
             "slug" => 's_o',
         ]);
 
-        // Collection::factory(10)->create();
+        Collection::factory(10)->create();
         //     ->create([
         //         'name' => 'olivia'
         //     ]);
@@ -178,6 +179,7 @@ class DatabaseSeeder extends Seeder
         //     'created_at' => '2024-09-02'
         // ]);
 
-        // ReturnList::factory()->count(10)->create();
+        ReturnList::factory()->count(10)->create();
+        Reject::factory()->count(10)->create();
     }
 }

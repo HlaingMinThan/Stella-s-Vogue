@@ -7,6 +7,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\RefillController;
+use App\Http\Controllers\RejectController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReturnListController;
 use App\Http\Middleware\MustBeAdminMiddleware;
@@ -63,6 +64,14 @@ Route::middleware(MustBeAuthUser::class)
         Route::get('/return_list/{return_list}/edit', [ReturnListController::class, 'edit'])->name('return_list.edit');
         Route::put('/return_list/{return_list}/update', [ReturnListController::class, 'update'])->name('return_list.update');
         Route::delete('/return_list/{return_list}/destroy', [ReturnListController::class, 'destroy'])->name('return_list.destroy');
+
+        //reject lists
+        Route::get('/reject_list', [RejectController::class, 'index'])->name('reject_list.index');
+        Route::get('/reject_list/create', [RejectController::class, 'create'])->name('reject_list.create');
+        Route::post('/reject_list/store', [RejectController::class, 'store'])->name('reject_list.store');
+        Route::get('/reject_list/{reject_list}/edit', [RejectController::class, 'edit'])->name('reject_list.edit');
+        Route::put('/reject_list/{reject_list}/update', [RejectController::class, 'update'])->name('reject_list.update');
+        Route::delete('/reject_list/{reject_list}/destroy', [RejectController::class, 'destroy'])->name('reject_list.destroy');
 
         // order details
         Route::get('/collections/{collection}/order_details', [OrderDetailController::class, 'index'])->name('order_details.index');

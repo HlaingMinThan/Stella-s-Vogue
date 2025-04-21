@@ -32,6 +32,14 @@ export default function getSideNavLinks() {
             url: "/admin/return_list",
             allowedRoles: ["admin"],
         },
+        {
+            icon: "fa-inbox",
+            path: route("admin.reject_list.index"),
+            title: "Manage Reject List",
+            component: "Admin/RejectList/Index",
+            url: "/admin/reject_list",
+            allowedRoles: ["admin"],
+        },
         // {
         //     icon: 'fa-users',
         //     path: route('admin.orders.index'),

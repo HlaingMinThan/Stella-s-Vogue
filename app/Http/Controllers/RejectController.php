@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Collection;
-use App\Models\ReturnList;
+use App\Models\Reject;
 use Illuminate\Http\Request;
 
-class ReturnListController extends Controller
+class RejectController extends Controller
 {
     public function index()
     {
-        return inertia('Admin/ReturnList/Index', [
-            'returns' => ReturnList::with('collection')->where('customer_name', 'Like', '%' . request('search') . '%')->orWhereHas('collection', function ($q) {
+        return inertia('Admin/RejectList/Index', [
+            'rejects' => Reject::with('collection')->where('customer_name', 'Like', '%' . request('search') . '%')->orWhereHas('collection', function ($q) {
                 return $q->where('name', 'Like', '%' . request('search') . '%');
             })
                 ->orderBy('date', 'desc')->paginate(10),
@@ -20,14 +20,14 @@ class ReturnListController extends Controller
 
     public function create()
     {
-        return inertia('Admin/ReturnList/Form', [
+        return inertia('Admin/RejectList/Form', [
             'collections' => Collection::all()
         ]);
     }
-    public function edit(ReturnList $returnList)
+    public function edit(Reject $reject_list)
     {
-        return inertia('Admin/ReturnList/Form', [
-            'return_list' => $returnList,
+        return inertia('Admin/RejectList/Form', [
+            'reject_list' => $reject_list,
             'collections' => Collection::all()
         ]);
     }
@@ -39,38 +39,38 @@ class ReturnListController extends Controller
             'collection_id' => 'required|exists:collections,id',
             'color' => 'required|string',
             'pieces' => 'required|integer|min:1',
-            'note' => 'nullable|string',
+            'error_reason' => 'nullable|string',
             'date' => 'required|date'
         ]);
 
-        ReturnList::create($validated);
+        Reject::create($validated);
 
-        return redirect()->route('admin.return_list.index')
-            ->with('success', 'Return created successfully.');
+        return redirect()->route('admin.reject_list.index')
+            ->with('success', 'Reject created successfully.');
     }
 
-    public function update(Request $request, ReturnList $returnList)
+    public function update(Request $request, Reject $reject_list)
     {
         $validated = $request->validate([
             'customer_name' => 'required|string',
             'collection_id' => 'required|exists:collections,id',
             'color' => 'required|string',
             'pieces' => 'required|integer|min:1',
-            'note' => 'nullable|string',
+            'error_reason' => 'nullable|string',
             'date' => 'required|date'
         ]);
 
-        $returnList->update($validated);
+        $reject_list->update($validated);
 
-        return redirect()->route('admin.return_list.index')
-            ->with('success', 'Return updated successfully.');
+        return redirect()->route('admin.reject_list.index')
+            ->with('success', 'Reject updated successfully.');
     }
 
-    public function destroy(ReturnList $returnList)
+    public function destroy(Reject $reject_list)
     {
-        $returnList->delete();
+        $reject_list->delete();
 
-        return redirect()->route('admin.return_list.index')
-            ->with('success', 'Return deleted successfully.');
+        return redirect()->route('admin.reject_list.index')
+            ->with('success', 'Reject deleted successfully.');
     }
 }
